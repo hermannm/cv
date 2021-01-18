@@ -1,0 +1,57 @@
+:root {
+  --theme: #8f1402;
+}
+body {
+  height: 842px;
+  width: 595px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 12px;
+  display: flex;
+}
+.sidebar {
+  min-width: 30%;
+  max-width: 30%;
+  background-color: var(--theme);
+  color: white;
+}
+.sidebar img {
+  max-width: 100%;
+}
+.main img {
+  max-width: 50px;
+  max-height: 50px;
+  border: 1px solid var(--theme);
+  border-radius: 10px;
+}
+.main ul li {
+  margin-bottom: 5px;
+}
+.row {
+  display: flex;
+}
+.spaced {
+  gap: 5px;
+}
+.padded {
+  padding: 5px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.section {
+  margin: 10px 0px 10px 0px;
+  border-bottom: 1px solid var(--theme);
+  color: var(--theme);
+}
+.inline {
+  display: inline;
+}
