@@ -16,16 +16,7 @@ const getStyleClass = (key) => {
 window.onload = () => {
   const profilePicture = document.getElementById("profilepicture");
   const personFields = document.getElementById("person");
-  const educationSectionTitle = document.getElementById("educationSection");
-  const educationFields = document.getElementById("education");
-  const experienceSectionTitle = document.getElementById("experienceSection");
-  const experienceFields = document.getElementById("experience");
-
-  educationSectionTitle.textContent = norwegian ? "Utdanning" : "Education";
-  experienceSectionTitle.textContent = norwegian ? "Erfaring" : "Experience";
-
   profilePicture.src = data.person.profilepicture;
-
   Object.keys(data.person)
     .filter((field) => field !== "profilepicture")
     .map((field) => {
@@ -41,95 +32,126 @@ window.onload = () => {
       personField.className = `textField ${getStyleClass(field)}`;
       personFields.appendChild(personField);
     });
+  if (application) {
+    const applicationTitle = document.getElementById("firstTitle");
+    applicationTitle.textContent = `${
+      norwegian ? "Søknad" : "Application"
+    }: ${application}`;
+    const applicationText = document.getElementById("firstSection");
+    for (let applicationParagraph of applications[application]) {
+      const paragraphElement = document.createElement("p");
+      paragraphElement.textContent = applicationParagraph;
+      applicationText.appendChild(paragraphElement);
+    }
+  } else {
+    const educationSectionTitle = document.getElementById("firstTitle");
+    educationSectionTitle.textContent = norwegian ? "Utdanning" : "Education";
 
-  data.education.map((school) => {
-    const educationField = document.createElement("li");
-    educationField.className = "row spaced dataField";
+    const firstSection = document.getElementById("firstSection");
+    const educationFields = document.createElement("ul");
+    firstSection.appendChild(educationFields);
+    educationFields.className = "column fieldGap";
 
-    const educationImg = document.createElement("img");
-    educationImg.src = school.img;
-    educationField.appendChild(educationImg);
+    const experienceSectionTitle = document.getElementById("secondTitle");
+    experienceSectionTitle.textContent = norwegian ? "Erfaring" : "Experience";
+    experienceSectionTitle.className = "sectionTitle";
 
-    const educationText = document.createElement("div");
-    educationField.appendChild(educationText);
+    const secondSection = document.getElementById("secondSection");
+    const experienceFields = document.createElement("ul");
+    secondSection.appendChild(experienceFields);
+    experienceFields.className = "column fieldGap";
 
-    Object.keys(school)
-      .filter((key) => key !== "img")
-      .map((key) => {
-        const child = document.createElement("div");
-        child.className = `textField ${getStyleClass(key)}`;
-        child.innerHTML +=
-          (key == "specialization"
-            ? norwegian
-              ? "Spesialisering: "
-              : "Specialization: "
-            : "") + school[key];
-        educationText.appendChild(child);
-      });
+    data.education.map((school) => {
+      const educationField = document.createElement("li");
+      educationField.className = "row fieldGap";
 
-    educationFields.appendChild(educationField);
-  });
-  data.experience.map((job) => {
-    const experienceField = document.createElement("li");
-    experienceField.className = "row spaced dataField";
+      const educationImg = document.createElement("img");
+      educationImg.src = school.img;
+      educationField.appendChild(educationImg);
 
-    const experienceImg = document.createElement("img");
-    experienceImg.src = job.img;
-    experienceField.appendChild(experienceImg);
+      const educationText = document.createElement("div");
+      educationField.appendChild(educationText);
 
-    const experienceText = document.createElement("div");
-    experienceField.appendChild(experienceText);
+      Object.keys(school)
+        .filter((key) => key !== "img")
+        .map((key) => {
+          const child = document.createElement("div");
+          child.className = `textField ${getStyleClass(key)}`;
+          child.innerHTML +=
+            (key == "specialization"
+              ? norwegian
+                ? "Spesialisering: "
+                : "Specialization: "
+              : "") + school[key];
+          educationText.appendChild(child);
+        });
 
-    Object.keys(job)
-      .filter((field) => field !== "img")
-      .map((field) => {
-        const jobElement = document.createElement("div");
-        jobElement.className = `textField ${getStyleClass(field)}`;
-        if (field == "reference") {
-          const referenceContainer = document.createElement("div");
-          referenceContainer.className = "row spaced";
-          jobElement.appendChild(referenceContainer);
+      educationFields.appendChild(educationField);
+    });
+    data.experience.map((job) => {
+      const experienceField = document.createElement("li");
+      experienceField.className = "row fieldGap";
 
-          const referenceField = document.createElement("div");
-          referenceField.textContent = norwegian ? "Referanse:" : "Reference:";
-          referenceField.className = "bold";
-          referenceContainer.appendChild(referenceField);
+      const experienceImg = document.createElement("img");
+      experienceImg.src = job.img;
+      experienceField.appendChild(experienceImg);
 
-          const infoContainer = document.createElement("div");
-          referenceContainer.appendChild(infoContainer);
+      const experienceText = document.createElement("div");
+      experienceField.appendChild(experienceText);
 
-          const nameField = document.createElement("div");
-          nameField.textContent = `${job[field].name} (${job[field].title})`;
-          infoContainer.appendChild(nameField);
+      Object.keys(job)
+        .filter((field) => field !== "img")
+        .map((field) => {
+          const jobElement = document.createElement("div");
+          jobElement.className = `textField ${getStyleClass(field)}`;
+          if (field == "reference") {
+            const referenceContainer = document.createElement("div");
+            referenceContainer.className = "row spaced";
+            jobElement.appendChild(referenceContainer);
 
-          if (job[field].phonenumber) {
-            const phoneField = document.createElement("div");
-            phoneField.textContent = `${norwegian ? "Tlf." : "Phone"}: ${
-              job[field].phonenumber
-            }`;
-            infoContainer.appendChild(phoneField);
+            const referenceField = document.createElement("div");
+            referenceField.textContent = norwegian
+              ? "Referanse:"
+              : "Reference:";
+            referenceField.className = "bold";
+            referenceContainer.appendChild(referenceField);
+
+            const infoContainer = document.createElement("div");
+            referenceContainer.appendChild(infoContainer);
+
+            const nameField = document.createElement("div");
+            nameField.textContent = `${job[field].name} (${job[field].title})`;
+            infoContainer.appendChild(nameField);
+
+            if (job[field].phonenumber) {
+              const phoneField = document.createElement("div");
+              phoneField.textContent = `${norwegian ? "Tlf." : "Phone"}: ${
+                job[field].phonenumber
+              }`;
+              infoContainer.appendChild(phoneField);
+            }
+
+            if (job[field].email) {
+              const emailField = document.createElement("div");
+              emailField.textContent = `${norwegian ? "E-post" : "Email"}: ${
+                job[field].email
+              }`;
+              infoContainer.appendChild(emailField);
+            }
+          } else if (field == "link") {
+            const text = document.createTextNode(`${job[field].text}: `);
+            const link = document.createElement("a");
+            link.textContent = job[field].linkText;
+            link.href = job[field].url;
+            jobElement.appendChild(text);
+            jobElement.appendChild(link);
+          } else {
+            jobElement.innerHTML += job[field];
           }
+          experienceText.appendChild(jobElement);
+        });
 
-          if (job[field].email) {
-            const emailField = document.createElement("div");
-            emailField.textContent = `${norwegian ? "E-post" : "Email"}: ${
-              job[field].email
-            }`;
-            infoContainer.appendChild(emailField);
-          }
-        } else if (field == "link") {
-          const text = document.createTextNode(`${job[field].text}: `);
-          const link = document.createElement("a");
-          link.textContent = job[field].linkText;
-          link.href = job[field].url;
-          jobElement.appendChild(text);
-          jobElement.appendChild(link);
-        } else {
-          jobElement.innerHTML += job[field];
-        }
-        experienceText.appendChild(jobElement);
-      });
-
-    experienceFields.appendChild(experienceField);
-  });
+      experienceFields.appendChild(experienceField);
+    });
+  }
 };

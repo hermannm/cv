@@ -16,6 +16,9 @@ body {
   background-color: var(--theme);
   color: white;
 }
+.main {
+  flex-grow: 1;
+}
 .sidebar img {
   max-width: 100%;
 }
@@ -34,20 +37,28 @@ body {
 .spaced {
   gap: 5px;
 }
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.fieldGap {
+  gap: 10px;
+}
 .padded {
-  padding: 5px;
+  padding: 10px;
 }
 ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
-.section {
+.sectionTitle {
   margin: 10px 0px 10px 0px;
   border-bottom: 1px solid var(--theme);
   color: var(--theme);
   font-size: 24px;
   font-weight: bold;
+  flex-grow: 1;
 }
 .inline {
   display: inline;
