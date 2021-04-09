@@ -22,11 +22,14 @@ body {
 .sidebar img {
   max-width: 100%;
 }
-.main img {
+.main .logo {
   max-width: 50px;
   max-height: 50px;
   border: 1px solid var(--theme);
   border-radius: 10px;
+}
+#signature {
+  height: 70px;
 }
 .main ul li {
   margin-bottom: 5px;

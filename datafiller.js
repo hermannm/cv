@@ -18,7 +18,7 @@ window.onload = () => {
   const personFields = document.getElementById("person");
   profilePicture.src = data.person.profilepicture;
   Object.keys(data.person)
-    .filter((field) => field !== "profilepicture")
+    .filter((field) => !(field == "profilepicture" || field == "signature"))
     .map((field) => {
       const personField = document.createElement("li");
       if (data.person[field].link) {
@@ -37,12 +37,40 @@ window.onload = () => {
     applicationTitle.textContent = `${
       norwegian ? "Søknad" : "Application"
     }: ${application}`;
+
     const applicationText = document.getElementById("firstSection");
-    for (let applicationParagraph of applications[application]) {
+
+    for (const applicationParagraph of applications[application]) {
       const paragraphElement = document.createElement("p");
-      paragraphElement.textContent = applicationParagraph;
+      if (Array.isArray(applicationParagraph)) {
+        for (const subField of applicationParagraph) {
+          if (typeof subField === "object") {
+            const linkField = document.createElement("a");
+            linkField.textContent = subField.text;
+            linkField.href = subField.url;
+            paragraphElement.appendChild(linkField);
+          } else {
+            paragraphElement.appendChild(document.createTextNode(subField));
+          }
+        }
+      } else {
+        paragraphElement.textContent = applicationParagraph;
+      }
       applicationText.appendChild(paragraphElement);
     }
+
+    const regards = document.createElement("div");
+    regards.textContent = norwegian ? "Mvh." : "Sincerely,";
+    applicationText.appendChild(regards);
+
+    const signature = document.createElement("img");
+    signature.src = data.person.signature;
+    signature.id = "signature";
+    applicationText.appendChild(signature);
+
+    const signatureText = document.createElement("div");
+    signatureText.textContent = data.person.name.text;
+    applicationText.appendChild(signatureText);
   } else {
     const educationSectionTitle = document.getElementById("firstTitle");
     educationSectionTitle.textContent = norwegian ? "Utdanning" : "Education";
@@ -67,6 +95,7 @@ window.onload = () => {
 
       const educationImg = document.createElement("img");
       educationImg.src = school.img;
+      educationImg.className = "logo";
       educationField.appendChild(educationImg);
 
       const educationText = document.createElement("div");
@@ -94,6 +123,7 @@ window.onload = () => {
 
       const experienceImg = document.createElement("img");
       experienceImg.src = job.img;
+      experienceImg.className = "logo";
       experienceField.appendChild(experienceImg);
 
       const experienceText = document.createElement("div");
