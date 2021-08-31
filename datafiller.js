@@ -147,15 +147,8 @@ window.onload = () => {
               ],
             });
           }
-        } else if (key == "link") {
-          const text = document.createTextNode(`${listItem[key].text}: `);
-          const link = document.createElement("a");
-          link.textContent = listItem[key].linkText;
-          link.href = listItem[key].url;
-          experienceTextItem.appendChild(text);
-          experienceTextItem.appendChild(link);
         } else {
-          experienceTextItem.innerHTML += listItem[key];
+          addText({ parent: experienceTextItem, paragraph: listItem[key] });
         }
       },
     });

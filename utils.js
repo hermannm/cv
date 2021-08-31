@@ -50,6 +50,29 @@ const addText = ({ parent, paragraph }) => {
   }
 };
 
+const addIconElement = ({ iconPath, text, link, parent }) => {
+  const container = addElement({
+    type: link ? "a" : "div",
+    parent,
+    className: "row spaced",
+    href: link,
+  });
+
+  addElement({
+    type: "img",
+    parent: container,
+    src: iconPath,
+  });
+
+  addElement({
+    type: "div",
+    parent: container,
+    textContent: text,
+  });
+
+  return container;
+};
+
 const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
   addElement({
     type: "div",
