@@ -16,13 +16,13 @@ body {
   background-color: var(--theme);
   color: white;
 }
-.main {
+#main {
   flex-grow: 1;
 }
 .sidebar img {
   max-width: 100%;
 }
-.main .logo {
+#main .logo {
   max-width: 50px;
   max-height: 50px;
   border: 1px solid var(--theme);
@@ -31,7 +31,7 @@ body {
 #signature {
   height: 70px;
 }
-.main ul li {
+#main ul li {
   margin-bottom: 5px;
 }
 .row {

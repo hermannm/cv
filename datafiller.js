@@ -1,187 +1,163 @@
-const getStyleClass = (key) => {
-  switch (key) {
-    case "time":
-      return "bold";
-    case "name":
-    case "title":
-      return "title";
-    case "school":
-    case "organization":
-      return "gray";
-    default:
-      return "";
-  }
-};
-
 window.onload = () => {
+  const mainContainer = document.getElementById("main");
+
   const profilePicture = document.getElementById("profilepicture");
-  const personFields = document.getElementById("person");
   profilePicture.src = data.person.profilepicture;
+
+  const personFields = document.getElementById("person");
+
   Object.keys(data.person)
     .filter((field) => !(field == "profilepicture" || field == "signature"))
     .map((field) => {
-      const personField = document.createElement("li");
+      const personField = addElement({
+        type: "li",
+        parent: personFields,
+        className: `textField ${getStyleClass(field)}`,
+        textContent: data.person[field].text,
+      });
       if (data.person[field].link) {
-        const linkField = document.createElement("a");
-        linkField.textContent = data.person[field].text;
-        linkField.href = data.person[field].link;
-        personField.appendChild(linkField);
-      } else {
-        personField.textContent += data.person[field].text;
+        addElement({
+          type: "a",
+          parent: personField,
+          href: data.person[field].link,
+        });
       }
-      personField.className = `textField ${getStyleClass(field)}`;
-      personFields.appendChild(personField);
     });
-  if (application) {
-    const applicationTitle = document.getElementById("firstTitle");
-    applicationTitle.textContent = `${
-      norwegian ? "Søknad" : "Application"
-    }: ${application}`;
 
-    const applicationText = document.getElementById("firstSection");
+  if (application) {
+    addElement({
+      type: "div",
+      parent: mainContainer,
+      textContent: `${english ? "Application" : "Søknad"}: ${application}`,
+      className: "sectionTitle",
+    });
+
+    const applicationText = addElement({
+      type: "div",
+      parent: mainContainer,
+    });
 
     for (const applicationParagraph of applications[application]) {
-      const paragraphElement = document.createElement("p");
-      if (Array.isArray(applicationParagraph)) {
-        for (const subField of applicationParagraph) {
-          if (typeof subField === "object") {
-            const linkField = document.createElement("a");
-            linkField.textContent = subField.text;
-            linkField.href = subField.url;
-            paragraphElement.appendChild(linkField);
-          } else {
-            paragraphElement.appendChild(document.createTextNode(subField));
-          }
-        }
-      } else {
-        paragraphElement.textContent = applicationParagraph;
-      }
-      applicationText.appendChild(paragraphElement);
+      const paragraphElement = addElement({
+        type: "p",
+        parent: applicationText,
+      });
+      addText({ parent: paragraphElement, paragraph: applicationParagraph });
     }
 
-    const regards = document.createElement("div");
-    regards.textContent = norwegian ? "Mvh." : "Sincerely,";
-    applicationText.appendChild(regards);
-
-    const signature = document.createElement("img");
-    signature.src = data.person.signature;
-    signature.id = "signature";
-    applicationText.appendChild(signature);
-
-    const signatureText = document.createElement("div");
-    signatureText.textContent = data.person.name.text;
-    applicationText.appendChild(signatureText);
-  } else {
-    const educationSectionTitle = document.getElementById("firstTitle");
-    educationSectionTitle.textContent = norwegian ? "Utdanning" : "Education";
-
-    const firstSection = document.getElementById("firstSection");
-    const educationFields = document.createElement("ul");
-    firstSection.appendChild(educationFields);
-    educationFields.className = "column fieldGap";
-
-    const experienceSectionTitle = document.getElementById("secondTitle");
-    experienceSectionTitle.textContent = norwegian ? "Erfaring" : "Experience";
-    experienceSectionTitle.className = "sectionTitle";
-
-    const secondSection = document.getElementById("secondSection");
-    const experienceFields = document.createElement("ul");
-    secondSection.appendChild(experienceFields);
-    experienceFields.className = "column fieldGap";
-
-    data.education.map((school) => {
-      const educationField = document.createElement("li");
-      educationField.className = "row fieldGap";
-
-      const educationImg = document.createElement("img");
-      educationImg.src = school.img;
-      educationImg.className = "logo";
-      educationField.appendChild(educationImg);
-
-      const educationText = document.createElement("div");
-      educationField.appendChild(educationText);
-
-      Object.keys(school)
-        .filter((key) => key !== "img")
-        .map((key) => {
-          const child = document.createElement("div");
-          child.className = `textField ${getStyleClass(key)}`;
-          child.innerHTML +=
-            (key == "specialization"
-              ? norwegian
-                ? "Spesialisering: "
-                : "Specialization: "
-              : "") + school[key];
-          educationText.appendChild(child);
-        });
-
-      educationFields.appendChild(educationField);
+    addElement({
+      type: "div",
+      parent: applicationText,
+      textContent: english ? "Sincerely," : "Med vennlig hilsen,",
     });
-    data.experience.map((job) => {
-      const experienceField = document.createElement("li");
-      experienceField.className = "row fieldGap";
 
-      const experienceImg = document.createElement("img");
-      experienceImg.src = job.img;
-      experienceImg.className = "logo";
-      experienceField.appendChild(experienceImg);
+    addElement({
+      type: "img",
+      parent: applicationText,
+      src: data.person.signature,
+      id: "signature",
+    });
 
-      const experienceText = document.createElement("div");
-      experienceField.appendChild(experienceText);
+    addElement({
+      type: "div",
+      parent: applicationText,
+      textContent: data.person.name.text,
+    });
+  } else {
+    addListSection({
+      title: english ? "Education" : "Utdanning",
+      list: data.education,
+      mainContainer,
+      mapFunctionCreator: (textParent, listItem) => (key) => {
+        addElement({
+          type: "div",
+          parent: textParent,
+          className: `textField ${getStyleClass(key)}`,
+          textContent: `
+            ${
+              key == "specialization"
+                ? english
+                  ? "Specialization: "
+                  : "Spesialisering: "
+                : ""
+            } ${listItem[key]}`,
+        });
+      },
+    });
 
-      Object.keys(job)
-        .filter((field) => field !== "img")
-        .map((field) => {
-          const jobElement = document.createElement("div");
-          jobElement.className = `textField ${getStyleClass(field)}`;
-          if (field == "reference") {
-            const referenceContainer = document.createElement("div");
-            referenceContainer.className = "row spaced";
-            jobElement.appendChild(referenceContainer);
-
-            const referenceField = document.createElement("div");
-            referenceField.textContent = norwegian
-              ? "Referanse:"
-              : "Reference:";
-            referenceField.className = "bold";
-            referenceContainer.appendChild(referenceField);
-
-            const infoContainer = document.createElement("div");
-            referenceContainer.appendChild(infoContainer);
-
-            const nameField = document.createElement("div");
-            nameField.textContent = `${job[field].name} (${job[field].title})`;
-            infoContainer.appendChild(nameField);
-
-            if (job[field].phonenumber) {
-              const phoneField = document.createElement("div");
-              phoneField.textContent = `${norwegian ? "Tlf." : "Phone"}: ${
-                job[field].phonenumber
-              }`;
-              infoContainer.appendChild(phoneField);
-            }
-
-            if (job[field].email) {
-              const emailField = document.createElement("div");
-              emailField.textContent = `${norwegian ? "E-post" : "Email"}: ${
-                job[field].email
-              }`;
-              infoContainer.appendChild(emailField);
-            }
-          } else if (field == "link") {
-            const text = document.createTextNode(`${job[field].text}: `);
-            const link = document.createElement("a");
-            link.textContent = job[field].linkText;
-            link.href = job[field].url;
-            jobElement.appendChild(text);
-            jobElement.appendChild(link);
-          } else {
-            jobElement.innerHTML += job[field];
-          }
-          experienceText.appendChild(jobElement);
+    addListSection({
+      title: english ? "Experience" : "Erfaring",
+      list: data.experience,
+      mainContainer,
+      mapFunctionCreator: (textParent, listItem) => (key) => {
+        const experienceTextItem = addElement({
+          type: "div",
+          parent: textParent,
+          className: `textField ${getStyleClass(key)}`,
         });
 
-      experienceFields.appendChild(experienceField);
+        if (key == "reference") {
+          const referenceContainer = addElement({
+            type: "div",
+            parent: experienceTextItem,
+            className: "row spaced",
+          });
+
+          addElement({
+            type: "div",
+            parent: referenceContainer,
+            className: "bold",
+            textContent: english ? "Reference:" : "Referanse:",
+          });
+
+          const infoContainer = addElement({
+            type: "div",
+            parent: referenceContainer,
+          });
+
+          addElement({
+            type: "div",
+            parent: infoContainer,
+            textContent: `${listItem[key].name} (${listItem[key].title})`,
+          });
+
+          if (listItem[key].phonenumber) {
+            addElement({
+              type: "div",
+              parent: infoContainer,
+              textContent: `${english ? "Phone" : "Tlf."}: ${
+                listItem[key].phonenumber
+              }`,
+            });
+          }
+
+          if (listItem[key].email) {
+            const emailField = addElement({
+              type: "div",
+              parent: infoContainer,
+            });
+            addText({
+              parent: emailField,
+              paragraph: [
+                `${english ? "Email" : "E-post"}: `,
+                {
+                  text: listItem[key].email,
+                  url: `mailto:${listItem[key].email}`,
+                },
+              ],
+            });
+          }
+        } else if (key == "link") {
+          const text = document.createTextNode(`${listItem[key].text}: `);
+          const link = document.createElement("a");
+          link.textContent = listItem[key].linkText;
+          link.href = listItem[key].url;
+          experienceTextItem.appendChild(text);
+          experienceTextItem.appendChild(link);
+        } else {
+          experienceTextItem.innerHTML += listItem[key];
+        }
+      },
     });
   }
 };
