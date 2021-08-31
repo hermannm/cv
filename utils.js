@@ -106,10 +106,10 @@ const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
       parent: field,
     });
 
-    const mapFunction = mapFunctionCreator(text, listItem);
+    const mapFunction = mapFunctionCreator(text);
 
-    Object.keys(listItem)
-      .filter((key) => key !== "img")
+    Object.entries(listItem)
+      .filter(([key]) => key !== "img")
       .map(mapFunction);
   });
 };

@@ -68,89 +68,93 @@ window.onload = () => {
       title: english ? "Education" : "Utdanning",
       list: data.education,
       mainContainer,
-      mapFunctionCreator: (textParent, listItem) => (key) => {
-        addElement({
-          type: "div",
-          parent: textParent,
-          className: `textField ${getStyleClass(key)}`,
-          textContent: `
+      mapFunctionCreator:
+        (textParent) =>
+        ([key, item]) => {
+          addElement({
+            type: "div",
+            parent: textParent,
+            className: `textField ${getStyleClass(key)}`,
+            textContent: `
             ${
               key == "specialization"
                 ? english
                   ? "Specialization: "
                   : "Spesialisering: "
                 : ""
-            } ${listItem[key]}`,
-        });
-      },
+            } ${item}`,
+          });
+        },
     });
 
     addListSection({
       title: english ? "Experience" : "Erfaring",
       list: data.experience,
       mainContainer,
-      mapFunctionCreator: (textParent, listItem) => (key) => {
-        const experienceTextItem = addElement({
-          type: "div",
-          parent: textParent,
-          className: `textField ${getStyleClass(key)}`,
-        });
-
-        if (key == "reference") {
-          const referenceContainer = addElement({
+      mapFunctionCreator:
+        (textParent) =>
+        ([key, item]) => {
+          const experienceTextItem = addElement({
             type: "div",
-            parent: experienceTextItem,
-            className: "row spaced",
+            parent: textParent,
+            className: `textField ${getStyleClass(key)}`,
           });
 
-          addElement({
-            type: "div",
-            parent: referenceContainer,
-            className: "bold",
-            textContent: english ? "Reference:" : "Referanse:",
-          });
+          if (key == "reference") {
+            const referenceContainer = addElement({
+              type: "div",
+              parent: experienceTextItem,
+              className: "row spaced",
+            });
 
-          const infoContainer = addElement({
-            type: "div",
-            parent: referenceContainer,
-          });
+            addElement({
+              type: "div",
+              parent: referenceContainer,
+              className: "bold",
+              textContent: english ? "Reference:" : "Referanse:",
+            });
 
-          addElement({
-            type: "div",
-            parent: infoContainer,
-            textContent: `${listItem[key].name} (${listItem[key].title})`,
-          });
+            const infoContainer = addElement({
+              type: "div",
+              parent: referenceContainer,
+            });
 
-          if (listItem[key].phonenumber) {
             addElement({
               type: "div",
               parent: infoContainer,
-              textContent: `${english ? "Phone" : "Tlf."}: ${
-                listItem[key].phonenumber
-              }`,
+              textContent: `${item.name} (${item.title})`,
             });
-          }
 
-          if (listItem[key].email) {
-            const emailField = addElement({
-              type: "div",
-              parent: infoContainer,
-            });
-            addText({
-              parent: emailField,
-              paragraph: [
-                `${english ? "Email" : "E-post"}: `,
-                {
-                  text: listItem[key].email,
-                  url: `mailto:${listItem[key].email}`,
-                },
-              ],
-            });
+            if (item.phonenumber) {
+              addElement({
+                type: "div",
+                parent: infoContainer,
+                textContent: `${english ? "Phone" : "Tlf."}: ${
+                  item.phonenumber
+                }`,
+              });
+            }
+
+            if (item.email) {
+              const emailField = addElement({
+                type: "div",
+                parent: infoContainer,
+              });
+              addText({
+                parent: emailField,
+                paragraph: [
+                  `${english ? "Email" : "E-post"}: `,
+                  {
+                    text: item.email,
+                    url: `mailto:${item.email}`,
+                  },
+                ],
+              });
+            }
+          } else {
+            addText({ parent: experienceTextItem, paragraph: item });
           }
-        } else {
-          addText({ parent: experienceTextItem, paragraph: listItem[key] });
-        }
-      },
+        },
     });
   }
 };
