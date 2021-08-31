@@ -1,11 +1,13 @@
 const addElement = ({
   type,
   parent,
+  id,
   className,
   textContent,
   href,
   src,
-  id,
+  width,
+  height,
 }) => {
   const element = document.createElement(type);
   if (parent) parent.appendChild(element);
@@ -14,6 +16,8 @@ const addElement = ({
   if (textContent) element.textContent = textContent;
   if (href) element.href = href;
   if (src) element.src = src;
+  if (width) element.width = width;
+  if (height) element.height = height;
   return element;
 };
 
@@ -50,19 +54,42 @@ const addText = ({ parent, paragraph }) => {
   }
 };
 
-const addIconElement = ({ iconPath, text, link, parent }) => {
+const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
   const container = addElement({
     type: link ? "a" : "div",
     parent,
-    className: "row spaced",
+    className: "row spaced verticallyCentered",
     href: link,
   });
 
-  addElement({
-    type: "img",
-    parent: container,
-    src: iconPath,
-  });
+  let iconPath = undefined;
+
+  switch (iconKey) {
+    case "age":
+      iconPath = "icons/about.svg";
+      break;
+    case "email":
+      iconPath = `icons/email_${iconColor}.svg`;
+      break;
+    case "phone":
+      iconPath = `icons/phone_${iconColor}.svg`;
+      break;
+    case "github":
+      iconPath = "icons/github.svg";
+      break;
+    case "linkedin":
+      iconPath = "icons/linkedin.svg";
+  }
+
+  if (iconPath) {
+    addElement({
+      type: "img",
+      parent: container,
+      src: iconPath,
+      width: "20",
+      height: "20",
+    });
+  }
 
   addElement({
     type: "div",

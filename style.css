@@ -11,8 +11,8 @@ body {
   display: flex;
 }
 .sidebar {
-  min-width: 30%;
-  max-width: 30%;
+  min-width: 32%;
+  max-width: 32%;
   background-color: var(--theme);
   color: white;
 }
@@ -49,6 +49,9 @@ body {
 }
 .padded {
   padding: 10px;
+}
+.verticallyCentered {
+  align-items: center;
 }
 ul {
   list-style-type: none;

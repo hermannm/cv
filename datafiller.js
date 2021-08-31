@@ -6,21 +6,31 @@ window.onload = () => {
 
   const personFields = document.getElementById("person");
 
-  Object.keys(data.person)
-    .filter((field) => !(field == "profilepicture" || field == "signature"))
-    .map((field) => {
-      const personField = addElement({
-        type: "li",
-        parent: personFields,
-        className: `textField ${getStyleClass(field)}`,
-        textContent: data.person[field].text,
-      });
-      if (data.person[field].link) {
-        addElement({
-          type: "a",
-          parent: personField,
-          href: data.person[field].link,
+  Object.entries(data.person)
+    .filter(([key]) => !(key == "profilepicture" || key == "signature"))
+    .map(([key, item]) => {
+      if (key !== "name") {
+        addIconElement({
+          iconKey: key,
+          iconColor: "white",
+          text: item.text,
+          link: item.link,
+          parent: personFields,
         });
+      } else {
+        const personField = addElement({
+          type: "li",
+          parent: personFields,
+          className: `textField ${getStyleClass(key)}`,
+          textContent: item.text,
+        });
+        if (item.link) {
+          addElement({
+            type: "a",
+            parent: personField,
+            href: item.link,
+          });
+        }
       }
     });
 
@@ -125,30 +135,22 @@ window.onload = () => {
               textContent: `${item.name} (${item.title})`,
             });
 
-            if (item.phonenumber) {
-              addElement({
-                type: "div",
+            if (item.phone) {
+              addIconElement({
+                iconKey: "phone",
+                iconColor: "black",
                 parent: infoContainer,
-                textContent: `${english ? "Phone" : "Tlf."}: ${
-                  item.phonenumber
-                }`,
+                text: item.phone,
               });
             }
 
             if (item.email) {
-              const emailField = addElement({
-                type: "div",
+              addIconElement({
+                iconKey: "email",
+                iconColor: "black",
                 parent: infoContainer,
-              });
-              addText({
-                parent: emailField,
-                paragraph: [
-                  `${english ? "Email" : "E-post"}: `,
-                  {
-                    text: item.email,
-                    url: `mailto:${item.email}`,
-                  },
-                ],
+                text: item.email,
+                link: `mailto:${item.email}`,
               });
             }
           } else {
