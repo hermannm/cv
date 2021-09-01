@@ -25,12 +25,12 @@ const addText = ({ parent, paragraph }) => {
   if (Array.isArray(paragraph)) {
     for (const subField of paragraph) {
       if (typeof subField === "object") {
-        if (subField.url) {
+        if (subField.link) {
           addElement({
             type: "a",
             parent: parent,
             textContent: subField.text,
-            href: subField.url,
+            href: subField.link,
           });
         } else if (subField.bold) {
           addElement({
