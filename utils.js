@@ -54,7 +54,7 @@ const addText = ({ parent, paragraph }) => {
   }
 };
 
-const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
+const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
   const container = addElement({
     type: link ? "a" : "div",
     parent,
@@ -93,7 +93,7 @@ const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
   addElement({
     type: "div",
     parent: container,
-    textContent: text,
+    textContent,
   });
 
   return container;

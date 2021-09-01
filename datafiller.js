@@ -28,7 +28,7 @@ window.onload = () => {
         addIconElement({
           iconKey: key,
           iconColor: "white",
-          text: item.text,
+          textContent: item.text,
           link: item.link,
           parent: personFields,
         });
@@ -43,35 +43,30 @@ window.onload = () => {
       className: "sectionTitle",
     });
 
-    const applicationText = addElement({
-      type: "div",
-      parent: mainContainer,
-    });
-
     for (const applicationParagraph of applications[application]) {
       const paragraphElement = addElement({
         type: "p",
-        parent: applicationText,
+        parent: mainContainer,
       });
       addText({ parent: paragraphElement, paragraph: applicationParagraph });
     }
 
     addElement({
       type: "div",
-      parent: applicationText,
+      parent: mainContainer,
       textContent: english ? "Sincerely," : "Med vennlig hilsen,",
     });
 
     addElement({
       type: "img",
-      parent: applicationText,
+      parent: mainContainer,
       src: data.person.signature,
       id: "signature",
     });
 
     addElement({
       type: "div",
-      parent: applicationText,
+      parent: mainContainer,
       textContent: data.person.name.text,
     });
   } else {
@@ -141,7 +136,7 @@ window.onload = () => {
                 iconKey: "phone",
                 iconColor: "black",
                 parent: infoContainer,
-                text: item.phone,
+                textContent: item.phone,
               });
             }
 
@@ -150,7 +145,7 @@ window.onload = () => {
                 iconKey: "email",
                 iconColor: "black",
                 parent: infoContainer,
-                text: item.email,
+                textContent: item.email,
                 link: `mailto:${item.email}`,
               });
             }
