@@ -78,6 +78,7 @@ const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
       break;
     case "linkedin":
       iconPath = "icons/linkedin.svg";
+      break;
   }
   if (iconPath) {
     addElement({
