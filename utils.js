@@ -63,7 +63,6 @@ const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
   });
 
   let iconPath = undefined;
-
   switch (iconKey) {
     case "age":
       iconPath = "icons/about.svg";
@@ -80,7 +79,6 @@ const addIconElement = ({ iconKey, iconColor, text, link, parent }) => {
     case "linkedin":
       iconPath = "icons/linkedin.svg";
   }
-
   if (iconPath) {
     addElement({
       type: "img",

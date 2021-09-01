@@ -1,15 +1,30 @@
 window.onload = () => {
+  const sidebar = document.getElementById("sidebar");
   const mainContainer = document.getElementById("main");
 
-  const profilePicture = document.getElementById("profilepicture");
-  profilePicture.src = data.person.profilepicture;
+  addElement({
+    type: "img",
+    parent: sidebar,
+    src: data.person.profilepicture,
+  });
 
-  const personFields = document.getElementById("person");
+  const personFields = addElement({
+    type: "div",
+    parent: sidebar,
+    className: "padded column fieldGap",
+  });
 
   Object.entries(data.person)
     .filter(([key]) => !(key == "profilepicture" || key == "signature"))
     .map(([key, item]) => {
-      if (key !== "name") {
+      if (key == "name") {
+        addElement({
+          type: "div",
+          parent: personFields,
+          className: `textField ${getStyleClass(key)}`,
+          textContent: item.text,
+        });
+      } else {
         addIconElement({
           iconKey: key,
           iconColor: "white",
@@ -17,20 +32,6 @@ window.onload = () => {
           link: item.link,
           parent: personFields,
         });
-      } else {
-        const personField = addElement({
-          type: "li",
-          parent: personFields,
-          className: `textField ${getStyleClass(key)}`,
-          textContent: item.text,
-        });
-        if (item.link) {
-          addElement({
-            type: "a",
-            parent: personField,
-            href: item.link,
-          });
-        }
       }
     });
 
