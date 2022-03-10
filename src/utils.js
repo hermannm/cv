@@ -55,19 +55,19 @@ const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
   let iconPath = undefined;
   switch (iconKey) {
     case "age":
-      iconPath = "icons/about.svg";
+      iconPath = "../icons/about.svg";
       break;
     case "email":
-      iconPath = `icons/email_${iconColor}.svg`;
+      iconPath = `../icons/email_${iconColor}.svg`;
       break;
     case "phone":
-      iconPath = `icons/phone_${iconColor}.svg`;
+      iconPath = `../icons/phone_${iconColor}.svg`;
       break;
     case "github":
-      iconPath = "icons/github.svg";
+      iconPath = "../icons/github.svg";
       break;
     case "linkedin":
-      iconPath = "icons/linkedin.svg";
+      iconPath = "../icons/linkedin.svg";
       break;
   }
   if (iconPath) {
