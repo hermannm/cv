@@ -1,6 +1,7 @@
 :root {
   --theme: #022a2a;
 }
+
 body {
   height: 297mm;
   width: 210mm;
@@ -10,54 +11,68 @@ body {
   font-size: 16px;
   display: flex;
 }
+
 #sidebar {
   min-width: 32%;
   max-width: 32%;
   background-color: var(--theme);
   color: white;
 }
+
 #main {
   flex-grow: 1;
 }
+
 #sidebar img {
   max-width: 100%;
 }
+
 #main .logo {
   max-width: 50px;
   max-height: 50px;
   border: 1px solid var(--theme);
   border-radius: 10px;
 }
+
 #signature {
   height: 70px;
 }
+
 #main ul li {
   margin-bottom: 5px;
 }
+
 .row {
   display: flex;
 }
+
 .spaced {
   gap: 5px;
 }
+
 .column {
   display: flex;
   flex-direction: column;
 }
+
 .fieldGap {
   gap: 10px;
 }
+
 .padded {
   padding: 10px;
 }
+
 .verticallyCentered {
   align-items: center;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
+
 .sectionTitle {
   margin: 10px 0px 10px 0px;
   border-bottom: 1px solid var(--theme);
@@ -66,30 +81,39 @@ ul {
   font-weight: bold;
   flex-grow: 1;
 }
+
 .inline {
   display: inline;
 }
+
 .bold {
   font-weight: bold;
 }
+
 .italic {
   font-style: italic;
 }
+
 .title {
   font-size: 20px;
 }
+
 .gray {
   color: #606060;
 }
+
 .textField + .textField {
   margin-bottom: 3px;
 }
+
 .dataField + .dataField {
   margin-bottom: 10px;
 }
+
 a {
   color: inherit;
 }
+
 @media print {
   body,
   page {

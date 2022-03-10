@@ -1,14 +1,4 @@
-const addElement = ({
-  type,
-  parent,
-  id,
-  className,
-  textContent,
-  href,
-  src,
-  width,
-  height,
-}) => {
+const addElement = ({ type, parent, id, className, textContent, href, src, width, height }) => {
   const element = document.createElement(type);
   if (parent) parent.appendChild(element);
   if (id) element.id = id;
