@@ -82,9 +82,7 @@ window.onload = () => {
             parent: textParent,
             className: `textField ${getStyleClass(key)}`,
             textContent: `
-            ${
-              key == "specialization" ? (english ? "Specialization: " : "Spesialisering: ") : ""
-            } ${item}`,
+            ${key == "specialization" ? (english ? "Specialization: " : "Spesialisering: ") : ""} ${item}`,
           });
         },
     });
