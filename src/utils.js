@@ -132,13 +132,10 @@ const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
 
 const getStyleClass = (key) => {
   switch (key) {
-    case "time":
-      return "bold";
     case "name":
     case "title":
       return "title";
-    case "school":
-    case "organization":
+    case "time":
       return "gray";
     default:
       return "";
