@@ -82,7 +82,7 @@ window.onload = () => {
             parent: textParent,
             className: `textField ${getStyleClass(key)}`,
             textContent: `
-            ${key == "specialization" ? (english ? "Specialization: " : "Spesialisering: ") : ""} ${item}`,
+            ${key == "specialization" ? (english ? "Specialization: " : "Spesialisering: ") : ""}${item}`,
           });
         },
     });
@@ -125,23 +125,31 @@ window.onload = () => {
               textContent: `${item.name} (${item.title})`,
             });
 
-            if (item.phone) {
-              addIconElement({
-                iconKey: "phone",
-                iconColor: "black",
+            if (item.phone || item.email) {
+              const contactContainer = addElement({
+                type: "div",
                 parent: infoContainer,
-                textContent: item.phone,
+                className: "row fieldGap",
               });
-            }
 
-            if (item.email) {
-              addIconElement({
-                iconKey: "email",
-                iconColor: "black",
-                parent: infoContainer,
-                textContent: item.email,
-                link: `mailto:${item.email}`,
-              });
+              if (item.phone) {
+                addIconElement({
+                  iconKey: "phone",
+                  iconColor: "black",
+                  parent: contactContainer,
+                  textContent: item.phone,
+                });
+              }
+
+              if (item.email) {
+                addIconElement({
+                  iconKey: "email",
+                  iconColor: "black",
+                  parent: contactContainer,
+                  textContent: item.email,
+                  link: `mailto:${item.email}`,
+                });
+              }
             }
           } else {
             addText({ parent: experienceTextItem, paragraph: item });
