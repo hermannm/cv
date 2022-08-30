@@ -4,7 +4,10 @@ const addElement = ({ type, parent, id, className, textContent, href, src, width
   if (id) element.id = id;
   if (className) element.className = className;
   if (textContent) element.textContent = textContent;
-  if (href) element.href = href;
+  if (href) {
+    element.href = href;
+    element.target = "_blank";
+  }
   if (src) element.src = src;
   if (width) element.width = width;
   if (height) element.height = height;
@@ -62,6 +65,9 @@ const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
       break;
     case "phone":
       iconPath = `../icons/phone_${iconColor}.svg`;
+      break;
+    case "website":
+      iconPath = `../icons/website.svg`;
       break;
     case "github":
       iconPath = "../icons/github.svg";
