@@ -19,24 +19,11 @@ export const addText = ({ parent, paragraph }) => {
     for (const subField of paragraph) {
       if (typeof subField === "object") {
         if (subField.link) {
-          addElement({
-            type: "a",
-            parent: parent,
-            textContent: subField.text,
-            href: subField.link,
-          });
+          addElement({ type: "a", parent: parent, textContent: subField.text, href: subField.link });
         } else if (subField.bold) {
-          addElement({
-            type: "strong",
-            parent: parent,
-            textContent: subField.text,
-          });
+          addElement({ type: "strong", parent: parent, textContent: subField.text });
         } else if (subField.italics) {
-          addElement({
-            type: "em",
-            parent: parent,
-            textContent: subField.text,
-          });
+          addElement({ type: "em", parent: parent, textContent: subField.text });
         }
       } else {
         parent.appendChild(document.createTextNode(subField));
@@ -77,63 +64,34 @@ export const addIconElement = ({ iconKey, iconColor, textContent, link, parent }
       break;
   }
   if (iconPath) {
-    addElement({
-      type: "img",
-      parent: container,
-      src: iconPath,
-      width: "20",
-      height: "20",
-    });
+    addElement({ type: "img", parent: container, src: iconPath, width: "20", height: "20" });
   }
 
-  addElement({
-    type: "div",
-    parent: container,
-    textContent,
-  });
+  addElement({ type: "div", parent: container, textContent });
 
   return container;
 };
 
-export const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
-  addElement({
-    type: "div",
-    parent: mainContainer,
-    className: "sectionTitle",
-    textContent: title,
-  });
+export const addListSection = ({ title, list, mainContainer, listItemTransformer }) => {
+  addElement({ type: "div", parent: mainContainer, className: "sectionTitle", textContent: title });
 
-  const fields = addElement({
-    type: "ul",
-    parent: mainContainer,
-    className: "column fieldGap",
-  });
+  const fields = addElement({ type: "ul", parent: mainContainer, className: "column fieldGap" });
 
-  list.map((listItem) => {
-    const field = addElement({
-      type: "li",
-      parent: fields,
-      className: "row fieldGap",
-    });
+  for (const listItem of list) {
+    const field = addElement({ type: "li", parent: fields, className: "row fieldGap" });
 
-    addElement({
-      type: "img",
-      parent: field,
-      className: "logo",
-      src: listItem.img,
-    });
+    addElement({ type: "img", parent: field, className: "logo", src: listItem.img });
 
-    const text = addElement({
-      type: "div",
-      parent: field,
-    });
+    const text = addElement({ type: "div", parent: field });
 
-    const mapFunction = mapFunctionCreator(text);
+    const transform = listItemTransformer(text);
 
-    Object.entries(listItem)
-      .filter(([key]) => key !== "img")
-      .map(mapFunction);
-  });
+    for (const [key, field] of Object.entries(listItem)) {
+      if (key === "img") continue;
+
+      transform(key, field);
+    }
+  }
 };
 
 export const getStyleClass = (key) => {
