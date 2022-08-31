@@ -105,3 +105,18 @@ export const getStyleClass = (key) => {
       return "";
   }
 };
+
+export const ageFromBirthday = (birthday) => {
+  const now = new Date();
+
+  let age = now.getFullYear() - birthday.getFullYear();
+
+  if (
+    now.getMonth() < birthday.getMonth() ||
+    (now.getMonth() === birthday.getMonth() && now.getDate() < birthday.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+};
