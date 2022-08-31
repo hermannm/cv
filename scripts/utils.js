@@ -1,4 +1,4 @@
-const addElement = ({ type, parent, id, className, textContent, href, src, width, height }) => {
+export const addElement = ({ type, parent, id, className, textContent, href, src, width, height }) => {
   const element = document.createElement(type);
   if (parent) parent.appendChild(element);
   if (id) element.id = id;
@@ -14,7 +14,7 @@ const addElement = ({ type, parent, id, className, textContent, href, src, width
   return element;
 };
 
-const addText = ({ parent, paragraph }) => {
+export const addText = ({ parent, paragraph }) => {
   if (Array.isArray(paragraph)) {
     for (const subField of paragraph) {
       if (typeof subField === "object") {
@@ -47,7 +47,7 @@ const addText = ({ parent, paragraph }) => {
   }
 };
 
-const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
+export const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
   const container = addElement({
     type: link ? "a" : "div",
     parent,
@@ -95,7 +95,7 @@ const addIconElement = ({ iconKey, iconColor, textContent, link, parent }) => {
   return container;
 };
 
-const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
+export const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
   addElement({
     type: "div",
     parent: mainContainer,
@@ -136,7 +136,7 @@ const addListSection = ({ title, list, mainContainer, mapFunctionCreator }) => {
   });
 };
 
-const getStyleClass = (key) => {
+export const getStyleClass = (key) => {
   switch (key) {
     case "name":
     case "title":
