@@ -54,6 +54,8 @@ type PersonalInfoBase struct {
 		Link string `yaml:"link"`
 	} `yaml:"website"` // Optional.
 	ProfilePicturePath string `yaml:"profilePicturePath"`
+	SignaturePath      string `yaml:"signaturePath"`
+	SignaturePrefix    string `yaml:"signaturePrefix"`
 	GitHubLink         string `yaml:"githubLink"`   // Optional.
 	LinkedInLink       string `yaml:"linkedinLink"` // Optional.
 }

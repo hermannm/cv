@@ -11,6 +11,11 @@
 
     <div class="p-2">
       {{ .Application }}
+      <p>
+        {{ .PersonalInfo.SignaturePrefix }}
+        <img class="h-[70px]" src="{{ .PersonalInfo.SignaturePath }}" />
+        {{ .PersonalInfo.Name }}
+      </p>
     </div>
   </body>
 </html>
