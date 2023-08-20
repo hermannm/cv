@@ -11,21 +11,17 @@ import (
 )
 
 func renderTemplate(
-	fileName string, isJobApplication bool, templateData any,
+	outputName string, isJobApplication bool, templateData any,
 ) (outputPath string, err error) {
-	var dir string
-	if isJobApplication {
-		dir = JobApplicationsOutputDir
-	} else {
-		dir = OutputDir
-	}
+	outputPath, directories := getRenderOutputPath(outputName, isJobApplication)
 
 	permissions := fs.FileMode(0755)
-	if err := os.MkdirAll(dir, permissions); err != nil {
-		return "", fmt.Errorf("failed to create render output directory '%s': %w", dir, err)
+	if err := os.MkdirAll(directories, permissions); err != nil {
+		return "", fmt.Errorf(
+			"failed to create render output directories '%s': %w", directories, err,
+		)
 	}
 
-	outputPath = fmt.Sprintf("%s/%s.html", dir, fileName)
 	outputFile, err := os.Create(outputPath)
 	if err != nil {
 		return "", fmt.Errorf("failed to create template output file '%s': %w", outputPath, err)
@@ -49,6 +45,32 @@ func renderTemplate(
 	}
 
 	return outputPath, nil
+}
+
+func getRenderOutputPath(
+	outputName string, isJobApplication bool,
+) (outputPath string, directories string) {
+	var dirs strings.Builder
+	if isJobApplication {
+		dirs.WriteString(JobApplicationsOutputDir)
+	} else {
+		dirs.WriteString(OutputDir)
+	}
+
+	var fileName string
+	outputNameParts := strings.Split(outputName, "/")
+	for i, part := range outputNameParts {
+		if i == len(outputNameParts)-1 {
+			fileName = part
+		} else {
+			dirs.WriteRune('/')
+			dirs.WriteString(part)
+		}
+	}
+
+	directories = dirs.String()
+	outputPath = fmt.Sprintf("%s/%s.html", directories, fileName)
+	return outputPath, directories
 }
 
 func parseTemplates() (*template.Template, error) {
