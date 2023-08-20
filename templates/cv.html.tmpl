@@ -11,7 +11,7 @@
 
     <div class="p-2">
       <h1>{{ .EducationHeader }}</h1>
-      <ul class="flex flex-col gap-2">
+      <ul class="flex list-none flex-col gap-2 pl-0">
         {{ range $education := .Education }}
           <li class="flex gap-2">
             <img
@@ -33,7 +33,7 @@
       </ul>
 
       <h1>{{ .WorkExperienceHeader }}</h1>
-      <ul class="flex flex-col gap-2">
+      <ul class="flex list-none flex-col gap-2 pl-0">
         {{ range $experience := .WorkExperience }}
           <li class="flex gap-2">
             <img

@@ -22,6 +22,21 @@ p {
   margin-block-end: 1em;
 }
 
+ul {
+  @apply list-disc pl-6;
+}
+ol {
+  @apply list-decimal pl-6;
+}
+ul ul,
+ol ul {
+  @apply list-[circle] pl-8;
+}
+ol ol,
+ul ol {
+  @apply list-[lower-latin] pl-8;
+}
+
 h1 {
   @apply mb-2 mt-2 border-b border-b-primary text-2xl font-bold text-primary;
 }
