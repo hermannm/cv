@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CV</title>
+    <meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="/output/styles.css" />
+  </head>
+  <body class="ml-auto mr-auto flex h-[297mm] w-[210mm] font-main">
+    {{ template "sidebar.html.tmpl" .PersonalInfo }}
+
+
+    <div class="p-2">
+      <h1>{{ .EducationHeader }}</h1>
+      <ul class="flex flex-col gap-2">
+        {{ range $education := .Education }}
+          <li class="flex gap-2">
+            <img
+              class="h-[50px] w-[50px] rounded-lg border border-solid border-primary"
+              width="50"
+              height="50"
+              src="{{ $education.ImagePath }}"
+            />
+            <div>
+              <div class="text-xl">{{ $education.StudyProgram }}</div>
+              <div class="flex flex-col gap-[3px]">
+                <div>{{ $education.School }}</div>
+                <div class="text-gray-600">{{ $education.Time }}</div>
+                <div>{{ $.EducationSpecializationLabel }}: {{ $education.Specialization }}</div>
+              </div>
+            </div>
+          </li>
+        {{ end }}
+      </ul>
+
+      <h1>{{ .WorkExperienceHeader }}</h1>
+      <ul class="flex flex-col gap-2">
+        {{ range $experience := .WorkExperience }}
+          <li class="flex gap-2">
+            <img
+              class="h-[50px] w-[50px] rounded-lg border border-solid border-primary"
+              width="50"
+              height="50"
+              src="{{ $experience.ImagePath }}"
+            />
+            <div>
+              <div class="text-xl">{{ $experience.Title }}</div>
+              <div class="flex flex-col gap-[3px]">
+                <div>{{ $experience.Organization }}</div>
+                <div class="text-gray-600">{{ $experience.Time }}</div>
+                <div class="mb-0 [&>p+p]:mt-1 [&>p]:mb-0 [&>p]:mt-0">
+                  {{ $experience.Description }}
+                </div>
+                {{ if $experience.Reference.Name }}
+                  {{ $reference := $experience.Reference }}
+                  <div class="flex gap-1">
+                    <div class="font-bold">{{ $.WorkExperienceReferenceLabel }}:</div>
+                    <div>
+                      <div>{{ $reference.Name }} ({{ $reference.Title }})</div>
+                      <div class="flex gap-2">
+                        {{ if $reference.PhoneNumber }}
+                          <div class="flex items-center gap-1">
+                            <img width="20" height="20" src="/icons/phone-black.svg" />
+                            <div>{{ $reference.PhoneNumber }}</div>
+                          </div>
+                        {{ end }}
+                        {{ if $reference.Email }}
+                          <a class="flex items-center gap-1" href="mailto:{{ $reference.Email }}">
+                            <img width="20" height="20" src="/icons/email-black.svg" />
+                            <div>{{ $reference.Email }}</div>
+                          </a>
+                        {{ end }}
+                      </div>
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+            </div>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+  </body>
+</html>

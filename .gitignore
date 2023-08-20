@@ -1,2 +1,4 @@
-data.js
-img/
+.vscode
+content
+node_modules
+output

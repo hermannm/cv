@@ -1,0 +1,46 @@
+<div class="min-w-[32%] max-w-[32%] bg-primary text-white">
+  <img src="{{ .ProfilePicturePath }}" />
+  <div class="flex flex-col gap-2 p-2">
+    <div class="text-xl">{{ .Name }}</div>
+    <ul class="flex flex-col gap-3">
+      <li class="flex items-center gap-1">
+        <img src="/icons/about.svg" width="20" height="20" />
+        <div>{{ .Age }}</div>
+      </li>
+      <li>
+        <a class="flex items-center gap-1" href="mailto:{{ .Email }}">
+          <img src="/icons/email-white.svg" width="20" height="20" />
+          <div>{{ .Email }}</div>
+        </a>
+      </li>
+      <li class="flex items-center gap-1">
+        <img src="/icons/phone-white.svg" width="20" height="20" />
+        <div>{{ .PhoneNumber }}</div>
+      </li>
+      {{ if .Website.Text }}
+        <li>
+          <a class="flex items-center gap-1" href="{{ .Website.Link }}">
+            <img src="/icons/website.svg" width="20" height="20" />
+            <div>{{ .Website.Text }}</div>
+          </a>
+        </li>
+      {{ end }}
+      {{ if .GitHubLink }}
+        <li>
+          <a class="flex items-center gap-1" href="{{ .GitHubLink }}">
+            <img src="/icons/github.svg" width="20" height="20" />
+            <div>GitHub</div>
+          </a>
+        </li>
+      {{ end }}
+      {{ if .LinkedInLink }}
+        <li>
+          <a class="flex items-center gap-1" href="{{ .LinkedInLink }}">
+            <img src="/icons/linkedin.svg" width="20" height="20" />
+            <div>LinkedIn</div>
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
