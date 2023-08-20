@@ -74,27 +74,6 @@ func parsePersonalInfoFile(language string) (PersonalInfoTemplate, error) {
 	return infoTemplate, nil
 }
 
-func parseMarkdownField(fieldValue []byte, removeParagraphTags bool) (template.HTML, error) {
-	var parsedField strings.Builder
-	if err := goldmark.Convert([]byte(fieldValue), &parsedField); err != nil {
-		return template.HTML(""), fmt.Errorf("failed to parse markdown field: %w", err)
-	}
-
-	fieldString := parsedField.String()
-	if removeParagraphTags {
-		fieldString = removeParagraphTagsAroundHTML(fieldString)
-	}
-
-	return template.HTML(fieldString), nil
-}
-
-func removeParagraphTagsAroundHTML(html string) string {
-	html = strings.TrimSpace(html)
-	html, _ = strings.CutPrefix(html, "<p>")
-	html, _ = strings.CutSuffix(html, "</p>")
-	return html
-}
-
 func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
 	var dest Format
 
@@ -126,6 +105,27 @@ func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 	}
 
 	return template.HTML(parsedContent.String()), nil
+}
+
+func parseMarkdownField(fieldValue []byte, removeParagraphTags bool) (template.HTML, error) {
+	var parsedField strings.Builder
+	if err := goldmark.Convert([]byte(fieldValue), &parsedField); err != nil {
+		return template.HTML(""), fmt.Errorf("failed to parse markdown field: %w", err)
+	}
+
+	fieldString := parsedField.String()
+	if removeParagraphTags {
+		fieldString = removeParagraphTagsAroundHTML(fieldString)
+	}
+
+	return template.HTML(fieldString), nil
+}
+
+func removeParagraphTagsAroundHTML(html string) string {
+	html = strings.TrimSpace(html)
+	html, _ = strings.CutPrefix(html, "<p>")
+	html, _ = strings.CutSuffix(html, "</p>")
+	return html
 }
 
 func (personalInfo PersonalInfoYAML) getAgeString() (string, error) {
