@@ -3,7 +3,7 @@ export default {
   content: ["./output/**/*.html"],
   theme: {
     fontFamily: {
-      main: ["Trebuchet MS", "Helvetica", "sans-serif"],
+      main: ["Fira Sans", "Trebuchet MS", "Helvetica", "sans-serif"],
     },
     extend: {
       colors: {

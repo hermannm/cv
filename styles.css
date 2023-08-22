@@ -13,6 +13,30 @@ body {
   }
 }
 
+@font-face {
+  font-family: "Fira Sans";
+  src: url("/fonts/fira-sans.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  src: url("/fonts/fira-sans-bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  src: url("/fonts/fira-sans-italic.ttf") format("truetype");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
 a {
   text-decoration: underline;
 }
@@ -43,4 +67,8 @@ h1 {
 
 h1:first-child {
   @apply mt-0;
+}
+
+.cv-list-item-header {
+  @apply text-[1.1875rem] leading-7;
 }
