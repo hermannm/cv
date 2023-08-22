@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -16,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if flags.CV {
+	if flags.Application == "" {
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
 			fmt.Printf("failed to build CV: %v\n", err)
@@ -34,7 +33,6 @@ func main() {
 }
 
 type CommandLineFlags struct {
-	CV          bool
 	Application string
 	Language    string
 }
@@ -42,12 +40,11 @@ type CommandLineFlags struct {
 func parseCommandLineFlags() (CommandLineFlags, error) {
 	var flags CommandLineFlags
 
-	flag.BoolVar(&flags.CV, "cv", false, "Generate CV from content/cv.yml file.")
 	flag.StringVar(
 		&flags.Application,
 		"application",
 		"",
-		"Generate job application from content/applications/[arg value].md file.",
+		"Set to generate job application instead of a CV. Generates application from content/applications/[arg value].md file.",
 	)
 	flag.StringVar(
 		&flags.Language,
@@ -56,13 +53,6 @@ func parseCommandLineFlags() (CommandLineFlags, error) {
 		"Use content files with the given language code as a suffix. E.g. if lang=no is passed, then the file personal_info_no.yml will be used instead of personal_info.yml. Does not apply to job applications.",
 	)
 	flag.Parse()
-
-	if !flags.CV && flags.Application == "" {
-		return flags, errors.New("must pass either -cv or -application=[application name]")
-	}
-	if flags.CV && flags.Application != "" {
-		return flags, errors.New("cannot pass both -cv and -application args")
-	}
 
 	return flags, nil
 }
