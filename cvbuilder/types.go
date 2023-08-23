@@ -4,7 +4,7 @@ import "html/template"
 
 type CVTemplate struct {
 	CV
-	PersonalInfo PersonalInfoTemplate
+	PersonalInfo PersonalInfo
 }
 
 type CV struct {
@@ -42,31 +42,26 @@ type WorkExperienceReference struct {
 
 type JobApplicationTemplate struct {
 	Application  template.HTML
-	PersonalInfo PersonalInfoTemplate
+	PersonalInfo PersonalInfo
 }
 
-type PersonalInfoBase struct {
+type PersonalInfo struct {
 	Name        string `yaml:"name"`
 	Email       string `yaml:"email"`
 	PhoneNumber string `yaml:"phoneNumber"`
-	Website     struct {
-		Text string `yaml:"text"`
-		Link string `yaml:"link"`
-	} `yaml:"website"` // Optional.
+
 	ProfilePicturePath string `yaml:"profilePicturePath"`
 	SignaturePath      string `yaml:"signaturePath"`
 	SignaturePrefix    string `yaml:"signaturePrefix"`
-	GitHubLink         string `yaml:"githubLink"`   // Optional.
-	LinkedInLink       string `yaml:"linkedinLink"` // Optional.
-}
 
-type PersonalInfoYAML struct {
-	PersonalInfoBase `yaml:",inline"`
-	Birthday         string `yaml:"birthday"`
-	AgeSuffix        string `yaml:"ageSuffix"`
-}
+	Website struct {
+		Text string `yaml:"text"`
+		Link string `yaml:"link"`
+	} `yaml:"website"` // Optional.
+	GitHubLink   string `yaml:"githubLink"`   // Optional.
+	LinkedInLink string `yaml:"linkedinLink"` // Optional.
 
-type PersonalInfoTemplate struct {
-	PersonalInfoBase
-	Age string
+	Age       string `yaml:"age"`       // If not set, Birthday and AgeSuffix must be set.
+	Birthday  string `yaml:"birthday"`  // Required if Age is not set. Format: YYYY-MM-DD.
+	AgeSuffix string `yaml:"ageSuffix"` // Required if Age is not set.
 }

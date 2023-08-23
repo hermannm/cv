@@ -46,7 +46,7 @@ func parseCVFile(language string) (CV, error) {
 	return cv, nil
 }
 
-func parsePersonalInfoFile(language string) (PersonalInfoTemplate, error) {
+func parsePersonalInfoFile(language string) (PersonalInfo, error) {
 	var filePath string
 	if language == "" {
 		filePath = fmt.Sprintf("%s/%s.yml", ContentDir, PersonalInfoYAMLFileName)
@@ -54,24 +54,16 @@ func parsePersonalInfoFile(language string) (PersonalInfoTemplate, error) {
 		filePath = fmt.Sprintf("%s/%s_%s.yml", ContentDir, PersonalInfoYAMLFileName, language)
 	}
 
-	infoYAML, err := parseYAMLFile[PersonalInfoYAML](filePath)
+	personalInfo, err := parseYAMLFile[PersonalInfo](filePath)
 	if err != nil {
-		return PersonalInfoTemplate{}, fmt.Errorf(
-			"failed to parse personal info YAML file: %w", err,
-		)
+		return PersonalInfo{}, fmt.Errorf("failed to parse personal info YAML file: %w", err)
 	}
 
-	age, err := infoYAML.getAgeString()
-	if err != nil {
-		return PersonalInfoTemplate{}, fmt.Errorf("failed to parse age ")
+	if err := personalInfo.setAge(); err != nil {
+		return PersonalInfo{}, fmt.Errorf("failed to set age field on personal info: %w", err)
 	}
 
-	infoTemplate := PersonalInfoTemplate{
-		PersonalInfoBase: infoYAML.PersonalInfoBase,
-		Age:              age,
-	}
-
-	return infoTemplate, nil
+	return personalInfo, nil
 }
 
 func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
@@ -128,10 +120,14 @@ func removeParagraphTagsAroundHTML(html string) string {
 	return html
 }
 
-func (personalInfo PersonalInfoYAML) getAgeString() (string, error) {
+func (personalInfo *PersonalInfo) setAge() error {
+	if personalInfo.Age != "" {
+		return nil
+	}
+
 	birthday, err := time.Parse(time.DateOnly, personalInfo.Birthday)
 	if err != nil {
-		return "", fmt.Errorf("invalid format of birthday in personal info: %w", err)
+		return fmt.Errorf("invalid format of birthday in personal info: %w", err)
 	}
 
 	now := time.Now()
@@ -142,5 +138,6 @@ func (personalInfo PersonalInfoYAML) getAgeString() (string, error) {
 		age--
 	}
 
-	return fmt.Sprintf("%d %s", age, personalInfo.AgeSuffix), nil
+	personalInfo.Age = fmt.Sprintf("%d %s", age, personalInfo.AgeSuffix)
+	return nil
 }
