@@ -5,12 +5,14 @@ import (
 	"html/template"
 	"os"
 	"strings"
-	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/renderer/html"
 	"gopkg.in/yaml.v3"
 )
+
+var validate *validator.Validate = validator.New()
 
 func parseCVFile(language string) (CV, error) {
 	var filePath string
@@ -23,6 +25,10 @@ func parseCVFile(language string) (CV, error) {
 	cv, err := parseYAMLFile[CV](filePath)
 	if err != nil {
 		return CV{}, fmt.Errorf("failed to parse CV YAML file: %w", err)
+	}
+
+	if err := validate.Struct(cv); err != nil {
+		return CV{}, fmt.Errorf("invalid CV: %w", err)
 	}
 
 	for i, experience := range cv.WorkExperience {
@@ -54,16 +60,20 @@ func parsePersonalInfoFile(language string) (PersonalInfo, error) {
 		filePath = fmt.Sprintf("%s/%s_%s.yml", ContentDir, PersonalInfoYAMLFileName, language)
 	}
 
-	personalInfo, err := parseYAMLFile[PersonalInfo](filePath)
+	info, err := parseYAMLFile[PersonalInfo](filePath)
 	if err != nil {
 		return PersonalInfo{}, fmt.Errorf("failed to parse personal info YAML file: %w", err)
 	}
 
-	if err := personalInfo.setAge(); err != nil {
+	if err := validate.Struct(info); err != nil {
+		return PersonalInfo{}, fmt.Errorf("invalid personal info: %w", err)
+	}
+
+	if err := info.setAge(); err != nil {
 		return PersonalInfo{}, fmt.Errorf("failed to set age field on personal info: %w", err)
 	}
 
-	return personalInfo, nil
+	return info, nil
 }
 
 func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
@@ -118,26 +128,4 @@ func removeParagraphTagsAroundHTML(html string) string {
 	html, _ = strings.CutPrefix(html, "<p>")
 	html, _ = strings.CutSuffix(html, "</p>")
 	return html
-}
-
-func (personalInfo *PersonalInfo) setAge() error {
-	if personalInfo.Age != "" {
-		return nil
-	}
-
-	birthday, err := time.Parse(time.DateOnly, personalInfo.Birthday)
-	if err != nil {
-		return fmt.Errorf("invalid format of birthday in personal info: %w", err)
-	}
-
-	now := time.Now()
-	age := now.Year() - birthday.Year()
-
-	birthdayCelebratedThisYear := now.YearDay() >= birthday.YearDay()
-	if !birthdayCelebratedThisYear {
-		age--
-	}
-
-	personalInfo.Age = fmt.Sprintf("%d %s", age, personalInfo.AgeSuffix)
-	return nil
 }
