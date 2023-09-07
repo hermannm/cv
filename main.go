@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"hermannm.dev/cv/cvbuilder"
+	"hermannm.dev/wrap"
 )
 
 func main() {
@@ -18,14 +19,14 @@ func main() {
 	if flags.Application == "" {
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
-			fmt.Printf("failed to build CV: %v\n", err)
+			fmt.Println(wrap.Error(err, "failed to build CV"))
 			os.Exit(1)
 		}
 		fmt.Printf("CV built successfully! Output in %s\n", outputPath)
 	} else {
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
-			fmt.Printf("failed to build job application: %v\n", err)
+			fmt.Println(wrap.Error(err, "failed to build job application"))
 			os.Exit(1)
 		}
 		fmt.Printf("Job application built successfully! Output in %s\n", outputPath)

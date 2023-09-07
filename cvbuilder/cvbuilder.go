@@ -2,6 +2,8 @@ package cvbuilder
 
 import (
 	"fmt"
+
+	"hermannm.dev/wrap"
 )
 
 const (
@@ -23,22 +25,22 @@ const (
 func BuildCV(language string) (outputPath string, err error) {
 	cv, err := parseCVFile(language)
 	if err != nil {
-		return "", fmt.Errorf("failed to parse CV: %w", err)
+		return "", wrap.Error(err, "failed to parse CV")
 	}
 
 	personalInfo, err := parsePersonalInfoFile(language)
 	if err != nil {
-		return "", fmt.Errorf("failed to parse personal info: %w", err)
+		return "", wrap.Error(err, "failed to parse personal info")
 	}
 
 	template := CVTemplate{CV: cv, PersonalInfo: personalInfo}
 	outputPath, err = renderTemplate("cv", false, template)
 	if err != nil {
-		return "", fmt.Errorf("failed to render CV template: %w", err)
+		return "", wrap.Error(err, "failed to render CV template")
 	}
 
 	if err := generateTailwindCSS(); err != nil {
-		return "", fmt.Errorf("failed to generate styles for rendered CV: %w", err)
+		return "", wrap.Error(err, "failed to generate styles for rendered CV")
 	}
 
 	return outputPath, nil
@@ -48,22 +50,22 @@ func BuildJobApplication(applicationName string, language string) (outputPath st
 	filePath := fmt.Sprintf("%s/%s.md", JobApplicationsContentDir, applicationName)
 	content, err := parseMarkdownFile(filePath)
 	if err != nil {
-		return "", fmt.Errorf("failed to read job application: %w", err)
+		return "", wrap.Error(err, "failed to read job application")
 	}
 
 	personalInfo, err := parsePersonalInfoFile(language)
 	if err != nil {
-		return "", fmt.Errorf("failed to parse personal info: %w", err)
+		return "", wrap.Error(err, "failed to parse personal info")
 	}
 
 	template := JobApplicationTemplate{Application: content, PersonalInfo: personalInfo}
 	outputPath, err = renderTemplate(applicationName, true, template)
 	if err != nil {
-		return "", fmt.Errorf("failed to render job application template: %w", err)
+		return "", wrap.Error(err, "failed to render job application template")
 	}
 
 	if err := generateTailwindCSS(); err != nil {
-		return "", fmt.Errorf("failed to generate styles for rendered job application: %w", err)
+		return "", wrap.Error(err, "failed to generate styles for rendered job application")
 	}
 
 	return outputPath, nil

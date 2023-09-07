@@ -2,12 +2,15 @@ package cvbuilder
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"html/template"
 	"io/fs"
 	"os"
 	"os/exec"
 	"strings"
+
+	"hermannm.dev/wrap"
 )
 
 func renderTemplate(
@@ -17,20 +20,20 @@ func renderTemplate(
 
 	permissions := fs.FileMode(0755)
 	if err := os.MkdirAll(directories, permissions); err != nil {
-		return "", fmt.Errorf(
-			"failed to create render output directories '%s': %w", directories, err,
+		return "", wrap.Errorf(
+			err, "failed to create render output directories '%s'", directories,
 		)
 	}
 
 	outputFile, err := os.Create(outputPath)
 	if err != nil {
-		return "", fmt.Errorf("failed to create template output file '%s': %w", outputPath, err)
+		return "", wrap.Errorf(err, "failed to create template output file '%s'", outputPath)
 	}
 	defer outputFile.Close()
 
 	templates, err := parseTemplates()
 	if err != nil {
-		return "", fmt.Errorf("failed to parse template files: %w", err)
+		return "", wrap.Error(err, "failed to parse template files")
 	}
 
 	var templateName string
@@ -41,7 +44,7 @@ func renderTemplate(
 	}
 
 	if err := templates.ExecuteTemplate(outputFile, templateName, templateData); err != nil {
-		return "", fmt.Errorf("failed to execute template '%s': %w", templateName, err)
+		return "", wrap.Errorf(err, "failed to execute template '%s'", templateName)
 	}
 
 	return outputPath, nil
@@ -79,7 +82,7 @@ func parseTemplates() (*template.Template, error) {
 	templatesPattern := fmt.Sprintf("%s/*.tmpl", TemplatesDir)
 	templates, err := templates.ParseGlob(templatesPattern)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse templates: %w", err)
+		return nil, wrap.Error(err, "failed to parse templates")
 	}
 
 	return templates, nil
@@ -97,27 +100,28 @@ func execCommand(displayName string, commandName string, args ...string) error {
 
 	stderr, err := command.StderrPipe()
 	if err != nil {
-		return fmt.Errorf("failed to get pipe to %s's error output: %w", displayName, err)
+		return wrap.Errorf(err, "failed to get pipe to %s command's error output", displayName)
 	}
 
 	if err := command.Start(); err != nil {
-		return fmt.Errorf("failed to start %s command: %w", displayName, err)
+		return wrap.Errorf(err, "failed to start %s command", displayName)
 	}
 
 	errScanner := bufio.NewScanner(stderr)
 	var commandErrs strings.Builder
 	for errScanner.Scan() {
-		if commandErrs.Len() == 0 {
-			fmt.Fprintf(&commandErrs, "errors from %s:", displayName)
+		if commandErrs.Len() != 0 {
+			commandErrs.WriteRune('\n')
 		}
-		fmt.Fprintf(&commandErrs, "\n%s", errScanner.Text())
+		commandErrs.WriteString(errScanner.Text())
 	}
 
 	if err := command.Wait(); err != nil {
+		err = fmt.Errorf("%s command failed: %w", displayName, err)
 		if commandErrs.Len() == 0 {
-			return fmt.Errorf("%s failed: %w", displayName, err)
+			return err
 		} else {
-			return fmt.Errorf("%s failed: %w\n%s", displayName, err, commandErrs.String())
+			return wrap.Error(errors.New(commandErrs.String()), err.Error())
 		}
 	}
 

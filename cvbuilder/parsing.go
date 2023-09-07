@@ -10,6 +10,7 @@ import (
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/renderer/html"
 	"gopkg.in/yaml.v3"
+	"hermannm.dev/wrap"
 )
 
 var validate *validator.Validate = validator.New()
@@ -24,25 +25,25 @@ func parseCVFile(language string) (CV, error) {
 
 	cv, err := parseYAMLFile[CV](filePath)
 	if err != nil {
-		return CV{}, fmt.Errorf("failed to parse CV YAML file: %w", err)
+		return CV{}, wrap.Error(err, "failed to parse CV YAML file")
 	}
 
 	if err := validate.Struct(cv); err != nil {
-		return CV{}, fmt.Errorf("invalid CV: %w", err)
+		return CV{}, wrap.Error(err, "invalid CV")
 	}
 
 	for i, experience := range cv.WorkExperience {
 		experience.Organization, err = parseMarkdownField([]byte(experience.Organization), true)
 		if err != nil {
-			return CV{}, fmt.Errorf(
-				"invalid organization in work experience '%s': %w", experience.Title, err,
+			return CV{}, wrap.Errorf(
+				err, "invalid organization in work experience '%s'", experience.Title,
 			)
 		}
 
 		experience.Description, err = parseMarkdownField([]byte(experience.Description), false)
 		if err != nil {
-			return CV{}, fmt.Errorf(
-				"invalid description in work experience '%s': %w", experience.Title, err,
+			return CV{}, wrap.Errorf(
+				err, "invalid description in work experience '%s'", experience.Title,
 			)
 		}
 
@@ -62,15 +63,15 @@ func parsePersonalInfoFile(language string) (PersonalInfo, error) {
 
 	info, err := parseYAMLFile[PersonalInfo](filePath)
 	if err != nil {
-		return PersonalInfo{}, fmt.Errorf("failed to parse personal info YAML file: %w", err)
+		return PersonalInfo{}, wrap.Error(err, "failed to parse personal info YAML file")
 	}
 
 	if err := validate.Struct(info); err != nil {
-		return PersonalInfo{}, fmt.Errorf("invalid personal info: %w", err)
+		return PersonalInfo{}, wrap.Error(err, "invalid personal info")
 	}
 
 	if err := info.setAge(); err != nil {
-		return PersonalInfo{}, fmt.Errorf("failed to set age field on personal info: %w", err)
+		return PersonalInfo{}, wrap.Error(err, "failed to set age field on personal info")
 	}
 
 	return info, nil
@@ -81,11 +82,11 @@ func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
 
 	yamlContent, err := os.ReadFile(yamlFilePath)
 	if err != nil {
-		return dest, fmt.Errorf("failed to read file '%s': %w", yamlFilePath, err)
+		return dest, wrap.Errorf(err, "failed to read file '%s'", yamlFilePath)
 	}
 
 	if err := yaml.Unmarshal(yamlContent, &dest); err != nil {
-		return dest, fmt.Errorf("failed to parse YAML file '%s': %w", yamlFilePath, err)
+		return dest, wrap.Errorf(err, "failed to parse YAML file '%s'", yamlFilePath)
 	}
 
 	return dest, nil
@@ -94,15 +95,15 @@ func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
 func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 	rawContent, err := os.ReadFile(markdownFilePath)
 	if err != nil {
-		return template.HTML(""), fmt.Errorf("failed to read file '%s': %w", markdownFilePath, err)
+		return template.HTML(""), wrap.Errorf(err, "failed to read file '%s'", markdownFilePath)
 	}
 
 	markdownParser := goldmark.New(goldmark.WithRendererOptions(html.WithUnsafe()))
 
 	var parsedContent strings.Builder
 	if err := markdownParser.Convert(rawContent, &parsedContent); err != nil {
-		return template.HTML(""), fmt.Errorf(
-			"failed to parse markdown file '%s': %w", markdownFilePath, err,
+		return template.HTML(""), wrap.Errorf(
+			err, "failed to parse markdown file '%s'", markdownFilePath,
 		)
 	}
 
@@ -112,7 +113,7 @@ func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 func parseMarkdownField(fieldValue []byte, removeParagraphTags bool) (template.HTML, error) {
 	var parsedField strings.Builder
 	if err := goldmark.Convert([]byte(fieldValue), &parsedField); err != nil {
-		return template.HTML(""), fmt.Errorf("failed to parse markdown field: %w", err)
+		return template.HTML(""), wrap.Error(err, "failed to parse markdown field")
 	}
 
 	fieldString := parsedField.String()

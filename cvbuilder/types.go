@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"time"
+
+	"hermannm.dev/wrap"
 )
 
 type CVTemplate struct {
@@ -78,7 +80,7 @@ func (info *PersonalInfo) setAge() error {
 
 	birthday, err := time.Parse(time.DateOnly, info.Birthday)
 	if err != nil {
-		return fmt.Errorf("invalid format of birthday in personal info: %w", err)
+		return wrap.Error(err, "invalid format of birthday in personal info")
 	}
 
 	now := time.Now()
