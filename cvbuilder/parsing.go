@@ -25,11 +25,11 @@ func parseCVFile(language string) (CV, error) {
 
 	cv, err := parseYAMLFile[CV](filePath)
 	if err != nil {
-		return CV{}, wrap.Error(err, "failed to parse CV YAML file")
+		return CV{}, err
 	}
 
 	if err := validate.Struct(cv); err != nil {
-		return CV{}, wrap.Error(err, "invalid CV")
+		return CV{}, wrap.Error(err, "invalid CV data")
 	}
 
 	for i, experience := range cv.WorkExperience {
@@ -63,11 +63,11 @@ func parsePersonalInfoFile(language string) (PersonalInfo, error) {
 
 	info, err := parseYAMLFile[PersonalInfo](filePath)
 	if err != nil {
-		return PersonalInfo{}, wrap.Error(err, "failed to parse personal info YAML file")
+		return PersonalInfo{}, err
 	}
 
 	if err := validate.Struct(info); err != nil {
-		return PersonalInfo{}, wrap.Error(err, "invalid personal info")
+		return PersonalInfo{}, wrap.Error(err, "invalid personal info data")
 	}
 
 	if err := info.setAge(); err != nil {
