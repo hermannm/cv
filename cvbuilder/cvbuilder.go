@@ -25,7 +25,7 @@ const (
 func BuildCV(language string) (outputPath string, err error) {
 	cv, err := parseCVFile(language)
 	if err != nil {
-		return "", wrap.Error(err, "failed to parse CV")
+		return "", wrap.Error(err, "failed to parse CV content")
 	}
 
 	personalInfo, err := parsePersonalInfoFile(language)
