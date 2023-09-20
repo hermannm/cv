@@ -36,14 +36,18 @@ func parseCVFile(language string) (CV, error) {
 		experience.Organization, err = parseMarkdownField([]byte(experience.Organization), true)
 		if err != nil {
 			return CV{}, wrap.Errorf(
-				err, "invalid organization in work experience '%s'", experience.Title,
+				err,
+				"invalid organization in work experience '%s'",
+				experience.Title,
 			)
 		}
 
 		experience.Description, err = parseMarkdownField([]byte(experience.Description), false)
 		if err != nil {
 			return CV{}, wrap.Errorf(
-				err, "invalid description in work experience '%s'", experience.Title,
+				err,
+				"invalid description in work experience '%s'",
+				experience.Title,
 			)
 		}
 

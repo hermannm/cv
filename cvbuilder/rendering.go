@@ -14,15 +14,15 @@ import (
 )
 
 func renderTemplate(
-	outputName string, isJobApplication bool, templateData any,
+	outputName string,
+	isJobApplication bool,
+	templateData any,
 ) (outputPath string, err error) {
 	outputPath, directories := getRenderOutputPath(outputName, isJobApplication)
 
 	permissions := fs.FileMode(0755)
 	if err := os.MkdirAll(directories, permissions); err != nil {
-		return "", wrap.Errorf(
-			err, "failed to create render output directories '%s'", directories,
-		)
+		return "", wrap.Errorf(err, "failed to create render output directories '%s'", directories)
 	}
 
 	outputFile, err := os.Create(outputPath)
@@ -51,7 +51,8 @@ func renderTemplate(
 }
 
 func getRenderOutputPath(
-	outputName string, isJobApplication bool,
+	outputName string,
+	isJobApplication bool,
 ) (outputPath string, directories string) {
 	var dirs strings.Builder
 	if isJobApplication {
