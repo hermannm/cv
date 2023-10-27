@@ -1,6 +1,8 @@
 module hermannm.dev/cv
 
-go 1.21.0
+go 1.21.1
+
+toolchain go1.21.3
 
 require (
 	github.com/go-playground/validator/v10 v10.15.1
@@ -18,4 +20,5 @@ require (
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
+	hermannm.dev/devlog v0.2.0 // indirect
 )

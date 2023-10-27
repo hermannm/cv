@@ -2,34 +2,40 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log/slog"
 	"os"
 
 	"hermannm.dev/cv/cvbuilder"
-	"hermannm.dev/wrap"
+	"hermannm.dev/devlog"
+	"hermannm.dev/devlog/log"
 )
 
 func main() {
-	flags, err := parseCommandLineFlags()
-	if err != nil {
-		fmt.Printf("invalid args: %v\n", err)
-		os.Exit(1)
-	}
+	logger := slog.New(devlog.NewHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug}))
+	slog.SetDefault(logger)
+
+	flags := parseCommandLineFlags()
 
 	if flags.Application == "" {
+		log.Info("building CV...")
+
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
-			fmt.Println(wrap.Error(err, "failed to build CV"))
+			log.Error(err, "failed to build CV")
 			os.Exit(1)
 		}
-		fmt.Printf("CV built successfully! Output in %s\n", outputPath)
+
+		log.Info("CV built successfully!", slog.String("path", outputPath))
 	} else {
+		log.Info("building job application...", slog.String("name", flags.Application))
+
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
-			fmt.Println(wrap.Error(err, "failed to build job application"))
+			log.Error(err, "failed to build job application")
 			os.Exit(1)
 		}
-		fmt.Printf("Job application built successfully! Output in %s\n", outputPath)
+
+		log.Info("job application built successfully!", slog.String("path", outputPath))
 	}
 }
 
@@ -38,7 +44,7 @@ type CommandLineFlags struct {
 	Language    string
 }
 
-func parseCommandLineFlags() (CommandLineFlags, error) {
+func parseCommandLineFlags() CommandLineFlags {
 	var flags CommandLineFlags
 
 	flag.StringVar(
@@ -55,5 +61,5 @@ func parseCommandLineFlags() (CommandLineFlags, error) {
 	)
 	flag.Parse()
 
-	return flags, nil
+	return flags
 }
