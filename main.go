@@ -21,7 +21,7 @@ func main() {
 
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
-			log.Error(err, "failed to build CV")
+			log.ErrorCause(err, "failed to build CV")
 			os.Exit(1)
 		}
 
@@ -31,7 +31,7 @@ func main() {
 
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
-			log.Error(err, "failed to build job application")
+			log.ErrorCause(err, "failed to build job application")
 			os.Exit(1)
 		}
 
