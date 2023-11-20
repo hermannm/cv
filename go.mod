@@ -9,7 +9,7 @@ require (
 	github.com/yuin/goldmark v1.5.4
 	gopkg.in/yaml.v3 v3.0.1
 	hermannm.dev/devlog v0.3.2
-	hermannm.dev/wrap v0.3.0
+	hermannm.dev/wrap v0.3.1
 )
 
 require (
