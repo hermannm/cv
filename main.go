@@ -16,25 +16,25 @@ func main() {
 	flags := parseCommandLineFlags()
 
 	if flags.Application == "" {
-		log.Info("building CV...")
+		log.Info("Building CV...")
 
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
-			log.ErrorCause(err, "failed to build CV")
+			log.ErrorCause(err, "Failed to build CV")
 			os.Exit(1)
 		}
 
 		log.Info("CV built successfully!", "path", outputPath)
 	} else {
-		log.Info("building job application...", "name", flags.Application)
+		log.Info("Building job application...", "name", flags.Application)
 
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
-			log.ErrorCause(err, "failed to build job application")
+			log.ErrorCause(err, "Failed to build job application")
 			os.Exit(1)
 		}
 
-		log.Info("job application built successfully!", "path", outputPath)
+		log.Info("Job application built successfully!", "path", outputPath)
 	}
 }
 
