@@ -1,14 +1,12 @@
 module hermannm.dev/cv
 
-go 1.21.1
-
-toolchain go1.21.3
+go 1.22.0
 
 require (
 	github.com/go-playground/validator/v10 v10.15.1
 	github.com/yuin/goldmark v1.5.4
 	gopkg.in/yaml.v3 v3.0.1
-	hermannm.dev/devlog v0.3.2
+	hermannm.dev/devlog v0.5.0
 	hermannm.dev/wrap v0.3.1
 )
 

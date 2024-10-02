@@ -11,8 +11,7 @@ import (
 )
 
 func main() {
-	logHandler := devlog.NewHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug})
-	slog.SetDefault(slog.New(logHandler))
+	devlog.InitDefaultLogHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug})
 
 	flags := parseCommandLineFlags()
 
@@ -25,9 +24,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		log.Info("CV built successfully!", slog.String("path", outputPath))
+		log.Info("CV built successfully!", "path", outputPath)
 	} else {
-		log.Info("building job application...", slog.String("name", flags.Application))
+		log.Info("building job application...", "name", flags.Application)
 
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
@@ -35,7 +34,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		log.Info("job application built successfully!", slog.String("path", outputPath))
+		log.Info("job application built successfully!", "path", outputPath)
 	}
 }
 
