@@ -26,6 +26,14 @@
                 <div>{{ $education.School }}</div>
                 <div class="text-gray-600">{{ $education.Time }}</div>
                 <div>{{ $.EducationSpecializationLabel }}: {{ $education.Specialization }}</div>
+                {{ if $education.Thesis.Name }}
+                  <div>
+                    <span>{{ $.ThesisLabel }}: </span>
+                    <a href="{{ $education.Thesis.Link }}" class="italic">
+                      {{ $education.Thesis.Name }}
+                    </a>
+                  </div>
+                {{ end }}
               </div>
             </div>
           </li>

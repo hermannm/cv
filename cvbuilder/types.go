@@ -17,6 +17,7 @@ type CV struct {
 	EducationHeader              string      `yaml:"educationHeader"              validate:"required"`
 	Education                    []Education `yaml:"education"                    validate:"required,dive"`
 	EducationSpecializationLabel string      `yaml:"educationSpecializationLabel" validate:"required"`
+	ThesisLabel                  string      `yaml:"thesisLabel"                  validate:"required"`
 
 	WorkExperienceHeader         string           `yaml:"workExperienceHeader"         validate:"required"`
 	WorkExperience               []WorkExperience `yaml:"workExperience"               validate:"required,dive"`
@@ -28,7 +29,11 @@ type Education struct {
 	School         string `yaml:"school"         validate:"required"`
 	Time           string `yaml:"time"           validate:"required"`
 	Specialization string `yaml:"specialization" validate:"required"`
-	ImagePath      string `yaml:"imagePath"      validate:"required,filepath"`
+	Thesis         struct {
+		Name string `yaml:"name" validate:"required_with=Link"`
+		Link string `yaml:"link" validate:"required_with=Name,len=0|url"`
+	} `yaml:"thesis"` // Optional.
+	ImagePath string `yaml:"imagePath" validate:"required,filepath"`
 }
 
 type WorkExperience struct {
@@ -63,7 +68,7 @@ type PersonalInfo struct {
 
 	Website struct {
 		Text string `yaml:"text" validate:"required_with=Link"`
-		Link string `yaml:"link" validate:"url,required_with=Text"`
+		Link string `yaml:"link" validate:"required_with=Text,len=0|url"`
 	} `yaml:"website"` // Optional.
 	GitHubLink   string `yaml:"githubLink"   validate:"url"` // Optional.
 	LinkedInLink string `yaml:"linkedinLink" validate:"url"` // Optional.
