@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log/slog"
 	"os"
@@ -11,30 +12,32 @@ import (
 )
 
 func main() {
-	devlog.InitDefaultLogHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug})
+	log.SetDefault(devlog.NewHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug}))
+
+	ctx := context.Background()
 
 	flags := parseCommandLineFlags()
 
 	if flags.Application == "" {
-		log.Info("Building CV...")
+		log.Info(ctx, "Building CV...")
 
 		outputPath, err := cvbuilder.BuildCV(flags.Language)
 		if err != nil {
-			log.ErrorCause(err, "Failed to build CV")
+			log.Error(ctx, err, "Failed to build CV")
 			os.Exit(1)
 		}
 
-		log.Info("CV built successfully!", "path", outputPath)
+		log.Info(ctx, "CV built successfully!", "path", outputPath)
 	} else {
-		log.Info("Building job application...", "name", flags.Application)
+		log.Info(ctx, "Building job application...", "name", flags.Application)
 
 		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
 		if err != nil {
-			log.ErrorCause(err, "Failed to build job application")
+			log.Error(ctx, err, "Failed to build job application")
 			os.Exit(1)
 		}
 
-		log.Info("Job application built successfully!", "path", outputPath)
+		log.Info(ctx, "Job application built successfully!", "path", outputPath)
 	}
 }
 

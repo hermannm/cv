@@ -13,7 +13,7 @@ import (
 	"hermannm.dev/wrap"
 )
 
-var validate *validator.Validate = validator.New()
+var validate = validator.New()
 
 func parseCVFile(language string) (CV, error) {
 	var filePath string
@@ -99,14 +99,14 @@ func parseYAMLFile[Format any](yamlFilePath string) (Format, error) {
 func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 	rawContent, err := os.ReadFile(markdownFilePath)
 	if err != nil {
-		return template.HTML(""), wrap.Errorf(err, "failed to read file '%s'", markdownFilePath)
+		return "", wrap.Errorf(err, "failed to read file '%s'", markdownFilePath)
 	}
 
 	markdownParser := goldmark.New(goldmark.WithRendererOptions(html.WithUnsafe()))
 
 	var parsedContent strings.Builder
 	if err := markdownParser.Convert(rawContent, &parsedContent); err != nil {
-		return template.HTML(""), wrap.Errorf(
+		return "", wrap.Errorf(
 			err, "failed to parse markdown file '%s'", markdownFilePath,
 		)
 	}
@@ -117,7 +117,7 @@ func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 func parseMarkdownField(fieldValue []byte, removeParagraphTags bool) (template.HTML, error) {
 	var parsedField strings.Builder
 	if err := goldmark.Convert([]byte(fieldValue), &parsedField); err != nil {
-		return template.HTML(""), wrap.Error(err, "failed to parse markdown field")
+		return "", wrap.Error(err, "failed to parse markdown field")
 	}
 
 	fieldString := parsedField.String()
