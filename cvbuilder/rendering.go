@@ -2,6 +2,7 @@ package cvbuilder
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"html/template"
@@ -89,15 +90,15 @@ func parseTemplates() (*template.Template, error) {
 	return templates, nil
 }
 
-func generateTailwindCSS() error {
+func generateTailwindCSS(ctx context.Context) error {
 	outputPath := fmt.Sprintf("%s/%s", OutputDir, CSSFileName)
 	return execCommand(
-		"tailwind", "npx", "tailwindcss", "-i", CSSFileName, "-o", outputPath,
+		ctx, "tailwind", "npx", "tailwindcss", "-i", CSSFileName, "-o", outputPath,
 	)
 }
 
-func execCommand(displayName string, commandName string, args ...string) error {
-	command := exec.Command(commandName, args...)
+func execCommand(ctx context.Context, displayName string, commandName string, args ...string) error {
+	command := exec.CommandContext(ctx, commandName, args...)
 
 	stderr, err := command.StderrPipe()
 	if err != nil {

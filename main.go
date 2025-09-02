@@ -6,9 +6,10 @@ import (
 	"log/slog"
 	"os"
 
-	"hermannm.dev/cv/cvbuilder"
 	"hermannm.dev/devlog"
 	"hermannm.dev/devlog/log"
+
+	"hermannm.dev/cv/cvbuilder"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	if flags.Application == "" {
 		log.Info(ctx, "Building CV...")
 
-		outputPath, err := cvbuilder.BuildCV(flags.Language)
+		outputPath, err := cvbuilder.BuildCV(ctx, flags.Language)
 		if err != nil {
 			log.Error(ctx, err, "Failed to build CV")
 			os.Exit(1)
@@ -31,7 +32,7 @@ func main() {
 	} else {
 		log.Info(ctx, "Building job application...", "name", flags.Application)
 
-		outputPath, err := cvbuilder.BuildJobApplication(flags.Application, flags.Language)
+		outputPath, err := cvbuilder.BuildJobApplication(ctx, flags.Application, flags.Language)
 		if err != nil {
 			log.Error(ctx, err, "Failed to build job application")
 			os.Exit(1)

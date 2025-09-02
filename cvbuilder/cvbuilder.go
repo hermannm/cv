@@ -1,6 +1,7 @@
 package cvbuilder
 
 import (
+	"context"
 	"fmt"
 
 	"hermannm.dev/wrap"
@@ -22,7 +23,7 @@ const (
 	CSSFileName = "styles.css"
 )
 
-func BuildCV(language string) (outputPath string, err error) {
+func BuildCV(ctx context.Context, language string) (outputPath string, err error) {
 	cv, err := parseCVFile(language)
 	if err != nil {
 		return "", wrap.Error(err, "failed to parse CV content")
@@ -39,14 +40,18 @@ func BuildCV(language string) (outputPath string, err error) {
 		return "", wrap.Error(err, "failed to render CV template")
 	}
 
-	if err := generateTailwindCSS(); err != nil {
+	if err := generateTailwindCSS(ctx); err != nil {
 		return "", wrap.Error(err, "failed to generate styles for rendered CV")
 	}
 
 	return outputPath, nil
 }
 
-func BuildJobApplication(applicationName string, language string) (outputPath string, err error) {
+func BuildJobApplication(
+	ctx context.Context,
+	applicationName string,
+	language string,
+) (outputPath string, err error) {
 	filePath := fmt.Sprintf("%s/%s.md", JobApplicationsContentDir, applicationName)
 	content, err := parseMarkdownFile(filePath)
 	if err != nil {
@@ -64,7 +69,7 @@ func BuildJobApplication(applicationName string, language string) (outputPath st
 		return "", wrap.Error(err, "failed to render job application template")
 	}
 
-	if err := generateTailwindCSS(); err != nil {
+	if err := generateTailwindCSS(ctx); err != nil {
 		return "", wrap.Error(err, "failed to generate styles for rendered job application")
 	}
 

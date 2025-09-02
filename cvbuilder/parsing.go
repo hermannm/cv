@@ -116,7 +116,7 @@ func parseMarkdownFile(markdownFilePath string) (template.HTML, error) {
 
 func parseMarkdownField(fieldValue []byte, removeParagraphTags bool) (template.HTML, error) {
 	var parsedField strings.Builder
-	if err := goldmark.Convert([]byte(fieldValue), &parsedField); err != nil {
+	if err := goldmark.Convert(fieldValue, &parsedField); err != nil {
 		return "", wrap.Error(err, "failed to parse markdown field")
 	}
 
