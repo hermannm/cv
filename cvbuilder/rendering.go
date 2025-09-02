@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"hermannm.dev/errclose"
 	"hermannm.dev/wrap"
 )
 
@@ -18,7 +19,7 @@ func renderTemplate(
 	outputName string,
 	isJobApplication bool,
 	templateData any,
-) (outputPath string, err error) {
+) (outputPath string, returnedErr error) {
 	outputPath, directories := getRenderOutputPath(outputName, isJobApplication)
 
 	permissions := fs.FileMode(0755)
@@ -30,7 +31,7 @@ func renderTemplate(
 	if err != nil {
 		return "", wrap.Errorf(err, "failed to create template output file '%s'", outputPath)
 	}
-	defer outputFile.Close()
+	defer errclose.Closef(outputFile, &returnedErr, "template output file '%s'", outputPath)
 
 	templates, err := parseTemplates()
 	if err != nil {
@@ -97,7 +98,12 @@ func generateTailwindCSS(ctx context.Context) error {
 	)
 }
 
-func execCommand(ctx context.Context, displayName string, commandName string, args ...string) error {
+func execCommand(
+	ctx context.Context,
+	displayName string,
+	commandName string,
+	args ...string,
+) error {
 	command := exec.CommandContext(ctx, commandName, args...)
 
 	stderr, err := command.StderrPipe()
