@@ -94,7 +94,7 @@ func parseTemplates() (*template.Template, error) {
 func generateTailwindCSS(ctx context.Context) error {
 	outputPath := fmt.Sprintf("%s/%s", OutputDir, CSSFileName)
 	return execCommand(
-		ctx, "tailwind", "npx", "tailwindcss", "-i", CSSFileName, "-o", outputPath,
+		ctx, "tailwind", "npx", "@tailwindcss/cli", "-i", CSSFileName, "-o", outputPath,
 	)
 }
 

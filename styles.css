@@ -1,74 +1,85 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body {
-  line-height: 1.15;
-}
+@source './output/**/*.html';
 
-@media print {
-  body,
-  page {
-    margin: 0;
-  }
+@theme {
+    --font-*: initial;
+    --font-main: Fira Sans, Trebuchet MS, Helvetica, sans-serif;
+
+    --color-primary: #022a2a;
 }
 
 @font-face {
-  font-family: "Fira Sans";
-  src: url("/fonts/fira-sans.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
+    font-family: "Fira Sans";
+    src: url("/fonts/fira-sans.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Fira Sans";
-  src: url("/fonts/fira-sans-bold.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
+    font-family: "Fira Sans";
+    src: url("/fonts/fira-sans-bold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Fira Sans";
-  src: url("/fonts/fira-sans-italic.ttf") format("truetype");
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
+    font-family: "Fira Sans";
+    src: url("/fonts/fira-sans-italic.ttf") format("truetype");
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
 }
 
-a {
-  text-decoration: underline;
-}
+@layer base {
+    body {
+        line-height: 1.15;
+    }
 
-p {
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-}
+    @media print {
+        body {
+            margin: 0;
+        }
+    }
 
-ul {
-  @apply list-disc pl-6;
-}
-ol {
-  @apply list-decimal pl-6;
-}
-ul ul,
-ol ul {
-  @apply list-[circle] pl-8;
-}
-ol ol,
-ul ol {
-  @apply list-[lower-latin] pl-8;
-}
+    a {
+        text-decoration: underline;
+    }
 
-h1 {
-  @apply mb-2 mt-2 border-b border-b-primary text-2xl font-bold text-primary;
-}
+    p {
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+    }
 
-h1:first-child {
-  @apply mt-1;
+    ul {
+        @apply list-disc pl-6;
+    }
+
+    ol {
+        @apply list-decimal pl-6;
+    }
+
+    ul ul,
+    ol ul {
+        @apply list-[circle] pl-8;
+    }
+
+    ol ol,
+    ul ol {
+        @apply list-[lower-latin] pl-8;
+    }
+
+    h1 {
+        @apply mb-2 mt-2 border-b border-b-primary text-2xl font-bold text-primary;
+    }
+
+    h1:first-child {
+        @apply mt-1;
+    }
 }
 
 .cv-list-item-header {
-  @apply text-[1.1875rem] leading-7;
+    @apply text-[1.1875rem] leading-7;
 }
