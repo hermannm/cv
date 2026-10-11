@@ -7,38 +7,42 @@ import (
 	"os"
 
 	"hermannm.dev/devlog"
-	"hermannm.dev/devlog/log"
+	"hermannm.dev/devlog/errlog"
+	"hermannm.dev/devlog/sloginit"
 
 	"hermannm.dev/cv/cvbuilder"
 )
 
 func main() {
-	log.SetDefault(devlog.NewHandler(os.Stdout, &devlog.Options{Level: slog.LevelDebug}))
+	sloginit.InitPrettyLogHandler(
+		os.Stdout,
+		&devlog.Options{RenameErrorAttrKey: "cause", Level: slog.LevelDebug},
+	)
 
 	ctx := context.Background()
 
 	flags := parseCommandLineFlags()
 
 	if flags.Application == "" {
-		log.Info(ctx, "Building CV...")
+		slog.InfoContext(ctx, "Building CV...")
 
 		outputPath, err := cvbuilder.BuildCV(ctx, flags.Language)
 		if err != nil {
-			log.Error(ctx, err, "Failed to build CV")
+			slog.ErrorContext(ctx, "Failed to build CV", errlog.Cause(err))
 			os.Exit(1)
 		}
 
-		log.Info(ctx, "CV built successfully!", "path", outputPath)
+		slog.InfoContext(ctx, "CV built successfully!", "path", outputPath)
 	} else {
-		log.Info(ctx, "Building job application...", "name", flags.Application)
+		slog.InfoContext(ctx, "Building job application...", "name", flags.Application)
 
 		outputPath, err := cvbuilder.BuildJobApplication(ctx, flags.Application, flags.Language)
 		if err != nil {
-			log.Error(ctx, err, "Failed to build job application")
+			slog.ErrorContext(ctx, "Failed to build job application", errlog.Cause(err))
 			os.Exit(1)
 		}
 
-		log.Info(ctx, "Job application built successfully!", "path", outputPath)
+		slog.InfoContext(ctx, "Job application built successfully!", "path", outputPath)
 	}
 }
 
