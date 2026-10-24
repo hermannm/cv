@@ -6,7 +6,7 @@ require (
 	github.com/go-playground/validator/v10 v10.30.5
 	github.com/yuin/goldmark v1.8.6
 	gopkg.in/yaml.v3 v3.0.1
-	hermannm.dev/devlog v0.7.0
+	hermannm.dev/devlog v0.7.1
 	hermannm.dev/errclose v0.1.1
 	hermannm.dev/wrap v0.5.0
 )
